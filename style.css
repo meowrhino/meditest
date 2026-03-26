@@ -14,13 +14,8 @@
   --bg: #050505;
   --surface: #111;
   --border: #000;
-  --green: #00a651;
-  --green-bright: #00e070;
-  --cyan: #00ffff;
-  --magenta: #ff00ff;
-  --gold: #ffd700;
   --text: #fff;
-  --text-dim: #888;
+  --text-dim: #666;
 }
 
 body {
@@ -32,9 +27,9 @@ body {
   user-select: none;
 }
 
-/* ── TEXTURAS DE FONDO (2 capas sutiles con mask-image para degradado) ── */
+/* ── TEXTURAS DE FONDO (radiales + pattern con opacidades) ── */
 
-/* capa 1: zigzag arrows — se desvanece hacia la derecha */
+/* capa 1: dots pattern con variación radial de opacidad */
 body::before {
   content: '';
   position: fixed;
@@ -44,17 +39,14 @@ body::before {
   mix-blend-mode: difference;
   opacity: 0.05;
   background-image:
-    linear-gradient(135deg, #888 25%, transparent 25%),
-    linear-gradient(225deg, #888 25%, transparent 25%),
-    linear-gradient(45deg, #888 25%, transparent 25%),
-    linear-gradient(315deg, #888 25%, transparent 25%);
-  background-position: 10px 0, 10px 0, 0 0, 0 0;
-  background-size: 20px 20px;
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 80%);
-  mask-image: linear-gradient(90deg, #000 0%, transparent 80%);
+    radial-gradient(circle, #999 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  /* radial mask: visible en centro, desvanece en bordes */
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 20%, transparent 75%);
 }
 
-/* capa 2: diagonal lines — se desvanece hacia arriba */
+/* capa 2: zigzag pattern con variación radial opuesta */
 body::after {
   content: '';
   position: fixed;
@@ -63,10 +55,16 @@ body::after {
   pointer-events: none;
   mix-blend-mode: difference;
   opacity: 0.04;
-  background-image: linear-gradient(-45deg, transparent, transparent 50%, #777 50%, #777);
-  background-size: 10px 10px;
-  -webkit-mask-image: linear-gradient(0deg, #000 0%, transparent 70%);
-  mask-image: linear-gradient(0deg, #000 0%, transparent 70%);
+  background-image:
+    linear-gradient(135deg, #777 25%, transparent 25%),
+    linear-gradient(225deg, #777 25%, transparent 25%),
+    linear-gradient(45deg, #777 25%, transparent 25%),
+    linear-gradient(315deg, #777 25%, transparent 25%);
+  background-position: 8px 0, 8px 0, 0 0, 0 0;
+  background-size: 16px 16px;
+  /* radial mask opuesta: visible en bordes, desvanece en centro */
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, transparent 15%, #000 70%);
+  mask-image: radial-gradient(ellipse at 50% 50%, transparent 15%, #000 70%);
 }
 
 /* ── escritorio ── */
@@ -185,34 +183,25 @@ body::after {
 .ventana-cerrar:hover { transform: scale(1.2); }
 .ventana-cerrar:active { transform: scale(0.9); }
 
-.ventana-fullscreen {
+.ventana-snap {
   width: 14px;
   height: 14px;
-  background: #00c853;
+  background: #ffd700;
   border: 2px solid #333;
   cursor: pointer;
   font-size: 0;
-  transition: transform 0.1s, background 0.15s;
+  transition: transform 0.1s, opacity 0.15s;
   flex-shrink: 0;
 }
 
-.ventana-fullscreen:hover { transform: scale(1.2); }
-.ventana-fullscreen:active { transform: scale(0.9); }
+.ventana-snap:hover { transform: scale(1.2); }
+.ventana-snap:active { transform: scale(0.9); }
+.ventana-snap.disabled { opacity: 0.3; cursor: default; }
+.ventana-snap.disabled:hover { transform: none; }
 
-/* when fullscreen, button turns yellow */
-.ventana.is-fullscreen .ventana-fullscreen {
-  background: #ffd700;
-}
-
-/* fullscreen state */
-.ventana.is-fullscreen {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 99990 !important;
-  border-radius: 0;
+/* snapped state */
+.ventana.is-snapped {
+  transition: top 0.2s, left 0.2s, width 0.2s, height 0.2s;
 }
 
 /* hide old close btn class if any */
@@ -357,7 +346,7 @@ body::after {
 .ctrl-btn:hover { background: #222; }
 
 .ctrl-btn.active {
-  background: var(--magenta);
+  background: #fff;
   color: #000;
 }
 
@@ -479,9 +468,9 @@ body::after {
 }
 
 .medi-item.active {
-  color: var(--cyan);
+  color: #aaa;
   background: #0a1a1a;
-  border-left: 5px solid var(--cyan);
+  border-left: 5px solid #aaa;
 }
 
 .medi-name {
@@ -492,7 +481,7 @@ body::after {
 .medi-dur {
   font-family: 'Space Mono', monospace;
   font-size: 0.55rem;
-  color: var(--magenta);
+  color: #fff;
   flex-shrink: 0;
 }
 
@@ -553,7 +542,7 @@ body::after {
   position: absolute;
   width: 12px;
   height: 12px;
-  background: var(--magenta);
+  background: #fff;
   border: 2px solid #fff;
   border-radius: 50%;
   pointer-events: none;
@@ -561,7 +550,7 @@ body::after {
   /* default: LPF top-right (max freq, min Q) */
   left: 90%;
   top: 90%;
-  box-shadow: 0 0 6px var(--magenta);
+  box-shadow: 0 0 6px #fff;
 }
 
 .hpf-pad .pad-cursor {

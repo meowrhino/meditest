@@ -9,9 +9,79 @@ const Windows = (() => {
   'use strict';
 
   let windowZ = 10;
-  let windowCounts = {}; // por tipo
+  let windowCounts = {};
   const CASCADE_OFFSET = 28;
   const iconosContainer = document.getElementById('iconos');
+
+  // ── snap grid system ──
+  // divides viewport into 3 slots (vertical if wider, horizontal if taller)
+  const snapSlots = [null, null, null]; // which ventana occupies each slot
+
+  function getSlotRects() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const isWide = vw >= vh;
+    const rects = [];
+
+    if (isWide) {
+      // 3 vertical columns
+      const w = Math.floor(vw / 3);
+      for (let i = 0; i < 3; i++) {
+        rects.push({ left: i * w, top: 0, width: w, height: vh });
+      }
+    } else {
+      // 3 horizontal rows
+      const h = Math.floor(vh / 3);
+      for (let i = 0; i < 3; i++) {
+        rects.push({ left: 0, top: i * h, width: vw, height: h });
+      }
+    }
+    return rects;
+  }
+
+  function snapToGrid(ventana) {
+    // find first free slot
+    let slotIdx = -1;
+    for (let i = 0; i < 3; i++) {
+      if (!snapSlots[i] || !document.body.contains(snapSlots[i])) {
+        snapSlots[i] = null; // clean stale refs
+      }
+      if (!snapSlots[i]) { slotIdx = i; break; }
+    }
+
+    if (slotIdx === -1) return; // all full
+
+    // if already snapped, unsnap first
+    const prevSlot = snapSlots.indexOf(ventana);
+    if (prevSlot !== -1) snapSlots[prevSlot] = null;
+
+    snapSlots[slotIdx] = ventana;
+    const rects = getSlotRects();
+    const r = rects[slotIdx];
+
+    ventana.classList.add('is-snapped');
+    ventana.style.top = r.top + 'px';
+    ventana.style.left = r.left + 'px';
+    ventana.style.width = r.width + 'px';
+    ventana.style.height = r.height + 'px';
+    ventana.style.zIndex = ++windowZ;
+
+    updateAllSnapButtons();
+  }
+
+  function updateAllSnapButtons() {
+    // clean stale
+    for (let i = 0; i < 3; i++) {
+      if (snapSlots[i] && !document.body.contains(snapSlots[i])) snapSlots[i] = null;
+    }
+    const allFull = snapSlots.every(s => s !== null);
+    document.querySelectorAll('.ventana-snap').forEach(btn => {
+      const vent = btn.closest('.ventana');
+      const isSnapped = snapSlots.includes(vent);
+      // disable if all slots full AND this window isn't already snapped
+      btn.classList.toggle('disabled', allFull && !isSnapped);
+    });
+  }
 
   // ── iconos ──
 
@@ -96,33 +166,12 @@ const Windows = (() => {
       });
     }
 
-    // fullscreen toggle
-    const fsBtn = ventana.querySelector('.ventana-fullscreen');
-    if (fsBtn) {
-      // save original size/position for restore
-      let savedStyle = null;
-
-      fsBtn.addEventListener('click', (e) => {
+    // snap-to-grid (yellow button)
+    const snapBtn = ventana.querySelector('.ventana-snap');
+    if (snapBtn) {
+      snapBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (ventana.classList.contains('is-fullscreen')) {
-          // restore
-          ventana.classList.remove('is-fullscreen');
-          if (savedStyle) {
-            ventana.style.top = savedStyle.top;
-            ventana.style.left = savedStyle.left;
-            ventana.style.width = savedStyle.width;
-            ventana.style.height = savedStyle.height;
-          }
-        } else {
-          // save current & go fullscreen
-          savedStyle = {
-            top: ventana.style.top,
-            left: ventana.style.left,
-            width: ventana.style.width,
-            height: ventana.style.height,
-          };
-          ventana.classList.add('is-fullscreen');
-        }
+        snapToGrid(ventana);
       });
     }
 
@@ -134,6 +183,11 @@ const Windows = (() => {
   }
 
   function cerrar(ventana) {
+    // free snap slot
+    const si = snapSlots.indexOf(ventana);
+    if (si !== -1) snapSlots[si] = null;
+    setTimeout(updateAllSnapButtons, 50);
+
     // limpiar audio si existe
     const state = ventana._state;
     if (state) {
