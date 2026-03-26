@@ -3,27 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>meditest — test estéticas</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>meditest — todas las versiones</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=MedievalSharp&family=Orbitron:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="v6_1.css">
   <link rel="stylesheet" href="v6_2.css">
   <link rel="stylesheet" href="v6_3.css">
+  <style>
+    /* hub nav at top */
+    .hub {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100000;
+      display: flex; background: #000; border-bottom: 3px solid #222;
+      font-family: 'Space Mono', monospace; overflow-x: auto;
+    }
+    .hub a, .hub button {
+      padding: 8px 14px; background: #111; color: #666; border: none;
+      border-right: 1px solid #222; cursor: pointer; font-family: inherit;
+      font-size: 0.45rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; transition: all 0.2s; text-decoration: none;
+      white-space: nowrap; display: block;
+    }
+    .hub a:hover, .hub button:hover { background: #222; color: #fff; }
+    .hub .on { background: #00a651; color: #fff; }
+    .hub .sep { background: #000; color: #333; pointer-events: none; padding: 8px 6px; font-size: 0.4rem; }
+  </style>
 </head>
 <body>
-<div class="tbar">
-  <button class="tbtn on" data-t="v6_1">v6_1 · retro terminal</button>
-  <button class="tbtn" data-t="v6_2">v6_2 · grimorio</button>
-  <button class="tbtn" data-t="v6_3">v6_3 · arcade cósmico</button>
-  <a href="/" class="tbtn" style="text-decoration:none">← app actual</a>
+
+<div class="hub">
+  <a href="/">← app</a>
+  <span class="sep">│</span>
+  <button class="on" data-t="v6_1">v6_1 retro terminal</button>
+  <button data-t="v6_2">v6_2 grimorio</button>
+  <button data-t="v6_3">v6_3 arcade cósmico</button>
+  <span class="sep">│</span>
+  <a href="all-versions.html">v1 13lunas original</a>
+  <a href="all-versions.html">v1_1 altar cósmico</a>
+  <a href="all-versions.html">v1_2 tierra mística</a>
+  <a href="all-versions.html">v1_3 neón galáctico</a>
+  <a href="all-versions.html">v5 chamfer + medieval</a>
 </div>
+
 <script src="build.js"></script>
 <script>
-document.querySelectorAll('.tbtn[data-t]').forEach(btn => {
+document.querySelectorAll('.hub button[data-t]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.dm').forEach(d => d.classList.remove('on'));
-    document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.hub button').forEach(b => b.classList.remove('on'));
     document.getElementById(btn.dataset.t).classList.add('on');
     btn.classList.add('on');
   });
