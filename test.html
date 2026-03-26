@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>meditest — test estéticas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cinzel:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── toggle bar ── */
+    .toggle-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      background: #111;
+      border-bottom: 2px solid #333;
+      font-family: 'Space Mono', monospace;
+    }
+    .toggle-btn {
+      padding: 10px 24px;
+      background: #222;
+      color: #888;
+      border: none;
+      border-right: 1px solid #333;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .toggle-btn:hover { background: #333; color: #fff; }
+    .toggle-btn.active { background: #7c3aed; color: #fff; }
+
+    /* ── demo content ── */
+    .demo {
+      display: none;
+      min-height: 100vh;
+      padding: 60px 20px 20px;
+      user-select: none;
+    }
+    .demo.active { display: block; }
+
+    .demo-windows {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    /* ── mock window ── */
+    .mock-window { width: 420px; display: flex; flex-direction: column; overflow: hidden; }
+    .mock-titlebar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+    .mock-close { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .mock-title { font-size: 0.7rem; font-weight: 700; text-transform: lowercase; letter-spacing: 1px; }
+    .mock-body { flex: 1; display: flex; flex-direction: column; }
+    .mock-franja { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; min-height: 90px; }
+
+    /* mock chakra row */
+    .mock-chakras { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+    .mock-chakra { display: flex; align-items: center; justify-content: center; }
+    .mock-chakra svg { display: block; }
+
+    /* mock controls */
+    .mock-controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .mock-btn { display: flex; align-items: center; justify-content: center; cursor: default; font-family: inherit; }
+    .mock-slider { width: 80px; height: 4px; border-radius: 2px; appearance: none; -webkit-appearance: none; }
+
+    /* ── mock medi window ── */
+    .mock-medi-list { list-style: none; flex: 1; padding: 0; }
+    .mock-medi-item { display: flex; justify-content: space-between; padding: 10px 16px; font-size: 0.7rem; }
+    .mock-medi-controls { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px; }
+
+    /* chakra colors */
+    .ch0 { --cc: #ff6b6b; }
+    .ch1 { --cc: #ffa94d; }
+    .ch2 { --cc: #ffd43b; }
+    .ch3 { --cc: #69db7c; }
+    .ch4 { --cc: #748ffc; }
+    .ch5 { --cc: #d0bfff; }
+    .ch6 { --cc: #e599f7; }
+
+
+    /* ═══════════════════════════════════════
+       ESTILO 1: ALTAR CÓSMICO
+       ═══════════════════════════════════════ */
+
+    #altar {
+      background: #1a0a2e;
+      color: #f0e6ff;
+      font-family: 'Cinzel', 'Space Mono', serif;
+      position: relative;
+    }
+
+    /* fondo: estrellas CSS + nebulosa */
+    #altar::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1px 1px at 10% 20%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 30% 70%, #fff 100%, transparent),
+        radial-gradient(1.5px 1.5px at 50% 10%, #ffd700 100%, transparent),
+        radial-gradient(1px 1px at 70% 40%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 90% 80%, #fff 100%, transparent),
+        radial-gradient(1.5px 1.5px at 20% 90%, #e599f7 100%, transparent),
+        radial-gradient(1px 1px at 60% 60%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 80% 15%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 15% 50%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 45% 85%, #fff 100%, transparent),
+        radial-gradient(1.5px 1.5px at 85% 55%, #748ffc 100%, transparent),
+        radial-gradient(1px 1px at 35% 35%, #fff 100%, transparent),
+        radial-gradient(ellipse at 30% 60%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, rgba(232, 121, 168, 0.1) 0%, transparent 50%);
+    }
+
+    /* textura de ruido sutil */
+    #altar::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.06;
+      background-image:
+        radial-gradient(circle, #ffd700 0.5px, transparent 0.5px),
+        radial-gradient(circle, #e599f7 0.3px, transparent 0.3px);
+      background-size: 44px 44px, 33px 33px;
+      background-position: 0 0, 17px 17px;
+    }
+
+    #altar .demo-windows { position: relative; z-index: 1; }
+
+    #altar .mock-window {
+      border: 3px solid #ffd700;
+      border-radius: 4px;
+      background: rgba(26, 10, 46, 0.95);
+      box-shadow:
+        0 0 20px rgba(255, 215, 0, 0.2),
+        0 0 60px rgba(124, 58, 237, 0.1),
+        inset 0 1px 0 rgba(255, 215, 0, 0.3),
+        inset 0 -1px 0 rgba(255, 215, 0, 0.1);
+    }
+
+    #altar .mock-titlebar {
+      background: linear-gradient(180deg, #2a1050 0%, #1a0a2e 100%);
+      border-bottom: 2px solid #ffd700;
+    }
+    #altar .mock-close { background: #ff6b6b; border: 2px solid #ffd700; }
+    #altar .mock-title { color: #ffd700; letter-spacing: 2px; }
+    #altar .mock-title::before { content: '☽ '; }
+    #altar .mock-title::after { content: ' ☾'; }
+
+    /* chakra franja */
+    #altar .franja-chakras { background: rgba(255, 215, 0, 0.03); }
+    #altar .mock-chakras { gap: 0; }
+    #altar .mock-chakra { margin-left: -4px; }
+    #altar .mock-chakra:first-child { margin-left: 0; }
+    #altar .mock-chakra svg {
+      filter: drop-shadow(0 0 8px var(--cc));
+      width: 52px; height: 52px;
+    }
+
+    /* color franja */
+    #altar .franja-color {
+      border-top: 2px solid #ffd700;
+      border-bottom: 2px solid #ffd700;
+      position: relative;
+    }
+    #altar .franja-color .color-text {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.6);
+      text-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+    #altar .franja-color .color-hz {
+      font-size: 0.75rem;
+      color: rgba(0,0,0,0.4);
+    }
+
+    /* controls franja */
+    #altar .franja-controls {
+      background: rgba(26, 10, 46, 0.8);
+    }
+    #altar .mock-btn {
+      border: 2px solid #ffd700;
+      background: rgba(255, 215, 0, 0.08);
+      color: #ffd700;
+      padding: 8px 16px;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    #altar .mock-btn.play {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      padding: 0;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+    #altar .mock-slider { background: #ffd700; height: 3px; opacity: 0.4; }
+
+    /* rainbow bar */
+    #altar .rainbow-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #748ffc, #d0bfff, #e599f7);
+    }
+
+    /* medi window */
+    #altar .mock-medi-item { color: #d0bfff; border-bottom: 1px solid rgba(255, 215, 0, 0.15); }
+    #altar .mock-medi-item.active-item { color: #ffd700; background: rgba(255, 215, 0, 0.06); }
+    #altar .mock-medi-item span:last-child { color: rgba(255, 215, 0, 0.4); }
+    #altar .mock-medi-controls {
+      border-top: 2px solid #ffd700;
+      background: rgba(26, 10, 46, 0.8);
+    }
+
+
+    /* ═══════════════════════════════════════
+       ESTILO 2: TIERRA MÍSTICA
+       ═══════════════════════════════════════ */
+
+    #tierra {
+      background: #1c1318;
+      color: #e8ddd0;
+      font-family: 'Cinzel', Georgia, serif;
+      position: relative;
+    }
+
+    /* textura: papel viejo / granulado */
+    #tierra::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 40% 50%, rgba(139, 90, 60, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 40%, rgba(100, 60, 120, 0.06) 0%, transparent 50%);
+    }
+    #tierra::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%238b5a3c' stroke-width='0.5'/%3E%3C/svg%3E");
+      background-size: 60px 60px;
+    }
+
+    #tierra .demo-windows { position: relative; z-index: 1; }
+
+    #tierra .mock-window {
+      border: 2px solid #8b5a3c;
+      border-radius: 2px;
+      background: rgba(28, 19, 24, 0.95);
+      box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(139, 90, 60, 0.2);
+    }
+
+    #tierra .mock-titlebar {
+      background: linear-gradient(180deg, rgba(139, 90, 60, 0.15) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(139, 90, 60, 0.3);
+    }
+    #tierra .mock-close { background: #8b5a3c; border: 1px solid #a0724e; }
+    #tierra .mock-title { color: #c4956a; letter-spacing: 1.5px; font-weight: 400; }
+    #tierra .mock-title::before { content: '~ '; }
+    #tierra .mock-title::after { content: ' ~'; }
+
+    /* chakras */
+    #tierra .franja-chakras { background: rgba(139, 90, 60, 0.04); }
+    #tierra .mock-chakras { gap: 0; }
+    #tierra .mock-chakra { margin-left: -5px; }
+    #tierra .mock-chakra:first-child { margin-left: 0; }
+    #tierra .mock-chakra svg {
+      filter: drop-shadow(0 0 5px var(--cc)) sepia(0.2);
+      width: 50px; height: 50px;
+    }
+
+    /* color */
+    #tierra .franja-color {
+      border-top: 1px solid rgba(139, 90, 60, 0.3);
+      border-bottom: 1px solid rgba(139, 90, 60, 0.3);
+    }
+    #tierra .franja-color .color-text {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: rgba(0,0,0,0.5);
+      font-style: italic;
+    }
+    #tierra .franja-color .color-hz {
+      font-size: 0.7rem;
+      color: rgba(0,0,0,0.3);
+    }
+
+    /* controls */
+    #tierra .franja-controls {
+      background: rgba(28, 19, 24, 0.6);
+    }
+    #tierra .mock-btn {
+      border: 1px solid #8b5a3c;
+      background: rgba(139, 90, 60, 0.1);
+      color: #c4956a;
+      padding: 8px 14px;
+      font-size: 0.6rem;
+      border-radius: 2px;
+    }
+    #tierra .mock-btn.play {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      padding: 0;
+    }
+    #tierra .mock-slider { background: #8b5a3c; height: 2px; opacity: 0.3; }
+
+    /* medi */
+    #tierra .mock-medi-item { color: #c4956a; border-bottom: 1px solid rgba(139, 90, 60, 0.1); }
+    #tierra .mock-medi-item.active-item { color: #e8ddd0; background: rgba(139, 90, 60, 0.08); border-left: 2px solid #8b5a3c; }
+    #tierra .mock-medi-item span:last-child { color: rgba(196, 149, 106, 0.4); }
+    #tierra .mock-medi-controls {
+      border-top: 1px solid rgba(139, 90, 60, 0.3);
+      background: rgba(28, 19, 24, 0.6);
+    }
+
+
+    /* ═══════════════════════════════════════
+       ESTILO 3: NEÓN GALÁCTICO
+       ═══════════════════════════════════════ */
+
+    #neon {
+      background: #0a0612;
+      color: #fff;
+      font-family: 'Orbitron', 'Space Mono', monospace;
+      position: relative;
+    }
+
+    /* fondo: nebulosas intensas + estrellas + grid */
+    #neon::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1px 1px at 15% 25%, #fff 100%, transparent),
+        radial-gradient(1.5px 1.5px at 45% 15%, #06b6d4 100%, transparent),
+        radial-gradient(1px 1px at 75% 65%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 25% 80%, #fff 100%, transparent),
+        radial-gradient(1.5px 1.5px at 85% 35%, #e599f7 100%, transparent),
+        radial-gradient(1px 1px at 55% 45%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 5% 95%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 95% 5%, #fff 100%, transparent),
+        radial-gradient(ellipse at 25% 50%, rgba(124, 58, 237, 0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 30%, rgba(6, 182, 212, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(232, 121, 168, 0.15) 0%, transparent 40%);
+    }
+
+    #neon::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image:
+        linear-gradient(rgba(124, 58, 237, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.3) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    #neon .demo-windows { position: relative; z-index: 1; }
+
+    #neon .mock-window {
+      border: 2px solid rgba(124, 58, 237, 0.6);
+      border-radius: 8px;
+      background: rgba(10, 6, 18, 0.9);
+      box-shadow:
+        0 0 30px rgba(124, 58, 237, 0.15),
+        0 0 80px rgba(124, 58, 237, 0.05),
+        inset 0 1px 0 rgba(124, 58, 237, 0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    #neon .mock-titlebar {
+      border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+      background: rgba(124, 58, 237, 0.05);
+    }
+    #neon .mock-close { background: #ff5f57; box-shadow: 0 0 6px rgba(255, 95, 87, 0.5); }
+    #neon .mock-title {
+      color: #06b6d4;
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+      letter-spacing: 3px;
+      font-size: 0.6rem;
+    }
+
+    /* chakras */
+    #neon .franja-chakras { background: rgba(124, 58, 237, 0.03); }
+    #neon .mock-chakras { gap: 0; }
+    #neon .mock-chakra { margin-left: -3px; }
+    #neon .mock-chakra:first-child { margin-left: 0; }
+    #neon .mock-chakra svg {
+      filter: drop-shadow(0 0 12px var(--cc)) drop-shadow(0 0 24px var(--cc));
+      width: 50px; height: 50px;
+    }
+
+    /* color */
+    #neon .franja-color {
+      border-top: 1px solid rgba(124, 58, 237, 0.2);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+      position: relative;
+    }
+    #neon .franja-color::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #neon .franja-color .color-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.5);
+      text-shadow: 0 0 20px rgba(255,255,255,0.2);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      position: relative; z-index: 1;
+    }
+    #neon .franja-color .color-hz {
+      font-size: 0.6rem;
+      color: rgba(0,0,0,0.35);
+      letter-spacing: 2px;
+      position: relative; z-index: 1;
+    }
+
+    /* controls */
+    #neon .franja-controls {
+      background: rgba(10, 6, 18, 0.5);
+    }
+    #neon .mock-btn {
+      border: 1px solid rgba(124, 58, 237, 0.4);
+      background: rgba(124, 58, 237, 0.08);
+      color: #d0bfff;
+      padding: 8px 14px;
+      font-size: 0.55rem;
+      border-radius: 6px;
+      text-shadow: 0 0 8px rgba(208, 191, 255, 0.3);
+    }
+    #neon .mock-btn.play {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      padding: 0;
+      border-color: var(--accent-cyan, #06b6d4);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+      color: #06b6d4;
+    }
+    #neon .mock-slider { background: rgba(124, 58, 237, 0.3); height: 3px; }
+
+    /* rainbow glow bar */
+    #neon .rainbow-bar {
+      height: 2px;
+      background: linear-gradient(90deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #748ffc, #d0bfff, #e599f7);
+      box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+    }
+
+    /* medi */
+    #neon .mock-medi-item { color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(124, 58, 237, 0.08); font-size: 0.65rem; }
+    #neon .mock-medi-item.active-item {
+      color: #06b6d4;
+      background: rgba(6, 182, 212, 0.06);
+      border-left: 2px solid #06b6d4;
+      text-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+    }
+    #neon .mock-medi-item span:last-child { color: rgba(255,255,255,0.2); }
+    #neon .mock-medi-controls {
+      border-top: 1px solid rgba(124, 58, 237, 0.2);
+      background: rgba(10, 6, 18, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toggle-bar">
+    <button class="toggle-btn active" onclick="show('altar')">☽ altar cósmico</button>
+    <button class="toggle-btn" onclick="show('tierra')">~ tierra mística</button>
+    <button class="toggle-btn" onclick="show('neon')">◇ neón galáctico</button>
+  </div>
+
+  <!-- ═══ ALTAR CÓSMICO ═══ -->
+  <div id="altar" class="demo active">
+    <div class="demo-windows">
+
+      <!-- frecuencias -->
+      <div class="mock-window">
+        <div class="rainbow-bar"></div>
+        <div class="mock-titlebar">
+          <div class="mock-close"></div>
+          <span class="mock-title">frecuencias</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-franja franja-chakras">
+            <div class="mock-chakras" id="altar-chakras"></div>
+          </div>
+          <div class="mock-franja franja-color" style="background: #69db7c;">
+            <div style="text-align: center;">
+              <div class="color-text">✦ corazón ✦</div>
+              <div class="color-hz">639 Hz</div>
+            </div>
+          </div>
+          <div class="mock-franja franja-controls">
+            <div class="mock-controls">
+              <div class="mock-btn">om drone</div>
+              <div class="mock-btn play">▶</div>
+              <input type="range" class="mock-slider" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="rainbow-bar"></div>
+      </div>
+
+      <!-- meditaciones -->
+      <div class="mock-window" style="width: 300px;">
+        <div class="rainbow-bar"></div>
+        <div class="mock-titlebar">
+          <div class="mock-close"></div>
+          <span class="mock-title">meditaciones</span>
+        </div>
+        <div class="mock-body">
+          <ul class="mock-medi-list">
+            <li class="mock-medi-item active-item"><span>relajación guiada</span><span>0:26</span></li>
+            <li class="mock-medi-item"><span>respiración consciente</span><span>0:40</span></li>
+            <li class="mock-medi-item"><span>body scan</span><span>0:35</span></li>
+          </ul>
+          <div class="mock-medi-controls">
+            <div class="mock-btn play">▶</div>
+          </div>
+        </div>
+        <div class="rainbow-bar"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ TIERRA MÍSTICA ═══ -->
+  <div id="tierra" class="demo">
+    <div class="demo-windows">
+      <div class="mock-window">
+        <div class="mock-titlebar">
+          <div class="mock-close"></div>
+          <span class="mock-title">frecuencias</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-franja franja-chakras">
+            <div class="mock-chakras" id="tierra-chakras"></div>
+          </div>
+          <div class="mock-franja franja-color" style="background: #69db7c;">
+            <div style="text-align: center;">
+              <div class="color-text">corazón</div>
+              <div class="color-hz">639 Hz</div>
+            </div>
+          </div>
+          <div class="mock-franja franja-controls">
+            <div class="mock-controls">
+              <div class="mock-btn">om drone</div>
+              <div class="mock-btn play">▶</div>
+              <input type="range" class="mock-slider" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-window" style="width: 300px;">
+        <div class="mock-titlebar">
+          <div class="mock-close"></div>
+          <span class="mock-title">meditaciones</span>
+        </div>
+        <div class="mock-body">
+          <ul class="mock-medi-list">
+            <li class="mock-medi-item active-item"><span>relajación guiada</span><span>0:26</span></li>
+            <li class="mock-medi-item"><span>respiración consciente</span><span>0:40</span></li>
+            <li class="mock-medi-item"><span>body scan</span><span>0:35</span></li>
+          </ul>
+          <div class="mock-medi-controls">
+            <div class="mock-btn play">▶</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NEÓN GALÁCTICO ═══ -->
+  <div id="neon" class="demo">
+    <div class="demo-windows">
+      <div class="mock-window">
+        <div class="rainbow-bar"></div>
+        <div class="mock-titlebar">
+          <div class="mock-close"></div>
+          <span class="mock-title">frecuencias</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-franja franja-chakras">
+            <div class="mock-chakras" id="neon-chakras"></div>
+          </div>
+          <div class="mock-franja franja-color" style="background: #69db7c;">
+            <div style="text-align: center;">
+              <div class="color-text">corazón</div>
+              <div class="color-hz">639 Hz</div>
+            </div>
+          </div>
+          <div class="mock-franja franja-controls">
+            <div class="mock-controls">
+              <div class="mock-btn">om drone</div>
+              <div class="mock-btn play">▶</div>
+              <input type="range" class="mock-slider" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-window" style="width: 300px;">
+        <div class="mock-titlebar">
+          <div class="mock-close"></div>
+          <span class="mock-title">meditaciones</span>
+        </div>
+        <div class="mock-body">
+          <ul class="mock-medi-list">
+            <li class="mock-medi-item active-item"><span>relajación guiada</span><span>0:26</span></li>
+            <li class="mock-medi-item"><span>respiración consciente</span><span>0:40</span></li>
+            <li class="mock-medi-item"><span>body scan</span><span>0:35</span></li>
+          </ul>
+          <div class="mock-medi-controls">
+            <div class="mock-btn play">▶</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // toggle logic
+    function show(id) {
+      document.querySelectorAll('.demo').forEach(d => d.classList.remove('active'));
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // generate chakra SVGs
+    const COLORS = ['#ff6b6b','#ffa94d','#ffd43b','#69db7c','#748ffc','#d0bfff','#e599f7'];
+    const SVGS = [
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><rect x="11" y="11" width="18" height="18" fill="none" stroke="${c}" stroke-width="1.8"/><circle cx="20" cy="20" r="4" fill="${c}"/>`,
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><circle cx="20" cy="20" r="10" fill="none" stroke="${c}" stroke-width="1.8"/><path d="M14 26 Q20 18 26 26" fill="none" stroke="${c}" stroke-width="1.5"/>`,
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><polygon points="20,30 8,12 32,12" fill="none" stroke="${c}" stroke-width="1.8" transform="rotate(180 20 20)"/><circle cx="20" cy="20" r="3" fill="${c}"/>`,
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><polygon points="20,9 28,27 12,27" fill="none" stroke="${c}" stroke-width="1.5"/><polygon points="20,31 12,13 28,13" fill="none" stroke="${c}" stroke-width="1.5"/>`,
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><circle cx="20" cy="20" r="11" fill="none" stroke="${c}" stroke-width="1.8"/><circle cx="20" cy="20" r="5" fill="none" stroke="${c}" stroke-width="1.2"/>`,
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><ellipse cx="20" cy="20" rx="13" ry="7" fill="none" stroke="${c}" stroke-width="1.5"/><circle cx="20" cy="20" r="4" fill="${c}"/>`,
+      c => `<circle cx="20" cy="20" r="17" fill="none" stroke="${c}" stroke-width="1.2" opacity="0.5"/><circle cx="20" cy="20" r="10" fill="none" stroke="${c}" stroke-width="1.2"/><circle cx="20" cy="20" r="3" fill="${c}"/><line x1="20" y1="3" x2="20" y2="37" stroke="${c}" stroke-width="0.8" opacity="0.5"/><line x1="3" y1="20" x2="37" y2="20" stroke="${c}" stroke-width="0.8" opacity="0.5"/><line x1="8" y1="8" x2="32" y2="32" stroke="${c}" stroke-width="0.8" opacity="0.5"/><line x1="32" y1="8" x2="8" y2="32" stroke="${c}" stroke-width="0.8" opacity="0.5"/>`,
+    ];
+
+    ['altar','tierra','neon'].forEach(id => {
+      const container = document.getElementById(id + '-chakras');
+      COLORS.forEach((c, i) => {
+        const div = document.createElement('div');
+        div.className = `mock-chakra ch${i}`;
+        div.innerHTML = `<svg viewBox="0 0 40 40">${SVGS[i](c)}</svg>`;
+        container.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
