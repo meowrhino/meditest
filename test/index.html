@@ -3,60 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>meditest — versiones estéticas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #050505; color: #ccc; font-family: 'Space Mono', monospace; min-height: 100vh; padding: 40px 20px; }
-    h1 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: #00e070; margin-bottom: 8px; }
-    p { font-size: 0.6rem; color: #666; margin-bottom: 30px; line-height: 1.6; }
-    .grid { display: flex; flex-direction: column; gap: 12px; max-width: 600px; }
-    a {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 18px;
-      background: #111; border: 3px solid #222;
-      color: #ccc; text-decoration: none;
-      font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      transition: all 0.15s;
-    }
-    a:hover { background: #1a1a1a; border-color: #00e070; color: #00e070; }
-    a .tag { font-size: 0.5rem; color: #666; font-weight: 400; }
-    a:hover .tag { color: #00aa44; }
-    .current { border-color: #00e070; }
-    .current::after { content: '← actual'; font-size: 0.45rem; color: #00e070; }
-    .rb { height: 8px; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #8800ff, #ff00ff, #ff0000); margin-bottom: 30px; }
-  </style>
+  <title>meditest — test estéticas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=MedievalSharp&family=Orbitron:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="v6_1.css">
+  <link rel="stylesheet" href="v6_2.css">
+  <link rel="stylesheet" href="v6_3.css">
 </head>
 <body>
-  <h1>meditest — versiones estéticas</h1>
-  <p>referencia de todas las iteraciones de diseño.<br>
-     los css de cada versión están en esta carpeta para futuro uso.</p>
-  <div class="rb"></div>
-  <div class="grid">
-    <a href="/" class="current">
-      <span>app actual — arcade cósmico</span>
-      <span class="tag">index.html + style.css</span>
-    </a>
-    <a href="#" onclick="alert('CSS guardado en test/v0.css — era la estética cósmica minimal pre-arcade');return false">
-      <span>v0 — cósmica minimal (glassmorphism)</span>
-      <span class="tag">test/v0.css</span>
-    </a>
-    <a href="#" onclick="alert('Versiones v1–v6_3 están en los archivos CSS de esta carpeta. El test interactivo anterior se puede reconstruir desde build.js + v6_1.css etc.');return false">
-      <span>v1 — 13lunas original (bisel + chamfer)</span>
-      <span class="tag">integrado en build anterior</span>
-    </a>
-    <a href="#" onclick="alert('Ver v6_1.css');return false">
-      <span>v6_1 — retro terminal (grid verde CRT)</span>
-      <span class="tag">test/v6_1.css</span>
-    </a>
-    <a href="#" onclick="alert('Ver v6_2.css');return false">
-      <span>v6_2 — grimorio (rombos dorados, orbes)</span>
-      <span class="tag">test/v6_2.css</span>
-    </a>
-    <a href="#" onclick="alert('Ver v6_3.css');return false">
-      <span>v6_3 — arcade cósmico (bloques color, base del actual)</span>
-      <span class="tag">test/v6_3.css</span>
-    </a>
-  </div>
+<div class="tbar">
+  <button class="tbtn on" data-t="v6_1">v6_1 · retro terminal</button>
+  <button class="tbtn" data-t="v6_2">v6_2 · grimorio</button>
+  <button class="tbtn" data-t="v6_3">v6_3 · arcade cósmico</button>
+  <a href="/" class="tbtn" style="text-decoration:none">← app actual</a>
+</div>
+<script src="build.js"></script>
+<script>
+document.querySelectorAll('.tbtn[data-t]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.dm').forEach(d => d.classList.remove('on'));
+    document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('on'));
+    document.getElementById(btn.dataset.t).classList.add('on');
+    btn.classList.add('on');
+  });
+});
+</script>
 </body>
 </html>
