@@ -1,0 +1,220 @@
+/*
+ * v6_3 — ARCADE CÓSMICO
+ *
+ * Fondo negro con estrellas de colores MUY visibles + zigzag grueso
+ * Bordes gruesos con bisel 3D clásico (highlight/shadow)
+ * Chakras = bloques cuadrados de color puro lado a lado (tipo pixel art)
+ * con el símbolo en negro dentro. Estilo arcade/8-bit
+ * Esquina cortada con franja de color visible (rosa→cyan)
+ */
+
+#v6_3 {
+  background: #050505;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  position: relative;
+}
+
+/* TEXTURA 1: estrellas multicolor GRUESAS y visibles */
+#v6_3::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 8% 15%, #ff6b6b 100%, transparent),
+    radial-gradient(2px 2px at 25% 80%, #ffa94d 100%, transparent),
+    radial-gradient(2.5px 2.5px at 42% 22%, #ffd43b 100%, transparent),
+    radial-gradient(2px 2px at 58% 65%, #69db7c 100%, transparent),
+    radial-gradient(2px 2px at 72% 12%, #748ffc 100%, transparent),
+    radial-gradient(2.5px 2.5px at 88% 75%, #d0bfff 100%, transparent),
+    radial-gradient(2px 2px at 15% 50%, #e599f7 100%, transparent),
+    radial-gradient(1.5px 1.5px at 35% 42%, #fff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 65% 38%, #fff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 50% 90%, #fff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 80% 50%, #fff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 92% 25%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 5% 88%, #00ffff 100%, transparent),
+    radial-gradient(2px 2px at 48% 5%, #ff00ff 100%, transparent);
+  opacity: 0.6;
+}
+
+/* TEXTURA 2: zigzag grueso blanco */
+#v6_3::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 6px, #fff 6px, #fff 8px),
+    repeating-linear-gradient(-45deg, transparent, transparent 6px, #fff 6px, #fff 8px);
+}
+
+#v6_3 > * { position: relative; z-index: 1; }
+
+#v6_3 .dlbl {
+  font-size: 0.5rem;
+  color: #ff00ff;
+  border: 3px solid #ff00ff;
+  padding: 4px 16px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 4px #ff00ff;
+}
+
+/* VENTANA: bisel 3D clásico con esquina cortada + franja de color */
+#v6_3 .wn {
+  width: 440px;
+  position: relative;
+  background: #111;
+  border: 5px solid #000;
+  box-shadow:
+    inset 3px 3px 0 #444,
+    inset -3px -3px 0 #222,
+    8px 8px 0 rgba(0,0,0,0.6);
+}
+
+/* franja diagonal rosa→cyan en la esquina */
+#v6_3 .wn::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ff00ff, #00ffff);
+  clip-path: polygon(100% 0%, 0% 0%, 100% 100%);
+  z-index: 10;
+}
+#v6_3 .wn::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 74px;
+  height: 74px;
+  background: #111;
+  clip-path: polygon(100% 0%, 6px 0%, 100% calc(100% - 6px));
+  z-index: 11;
+}
+
+/* ICONOS: emojis/caracteres grandes con colores */
+#v6_3 .icos { display: flex; gap: 20px; margin: 8px 0; }
+#v6_3 .ico-i { font-size: 2rem; cursor: pointer; }
+#v6_3 .ico-l { font-size: 0.4rem; color: #888; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+
+/* CHAKRAS: bloques cuadrados de color puro (pixel art) */
+#v6_3 .ch-row {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+#v6_3 .ch-block {
+  flex: 1;
+  min-height: 100px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.15s;
+  position: relative;
+  border-right: 3px solid #000;
+}
+#v6_3 .ch-block:last-child { border-right: none; }
+#v6_3 .ch-block:hover { filter: brightness(1.2); }
+#v6_3 .ch-block.sel::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 3px solid #fff;
+  pointer-events: none;
+}
+/* symbol in black on colored block */
+#v6_3 .ch-block svg { width: 48px; height: 48px; }
+
+/* franja color */
+#v6_3 .fr-color {
+  border-top: 5px solid #000;
+  border-bottom: 5px solid #000;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#v6_3 .c-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  letter-spacing: 5px;
+  position: relative;
+  z-index: 1;
+}
+#v6_3 .c-hz {
+  font-family: 'MedievalSharp', serif;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.4);
+  position: relative;
+  z-index: 1;
+}
+
+/* controles */
+#v6_3 .fr-ctrl {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #111;
+}
+#v6_3 .btn {
+  background: #1a1a1a;
+  border: 4px solid #000;
+  box-shadow: inset 2px 2px 0 #444, inset -2px -2px 0 #111;
+  color: #ff00ff;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  letter-spacing: 1px;
+  cursor: default;
+}
+#v6_3 .btn.act { background: #ff00ff; color: #000; box-shadow: inset 2px 2px 0 #ff88ff, inset -2px -2px 0 #880088; }
+#v6_3 .btn-play { width: 48px; height: 48px; padding: 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+
+#v6_3 .sl {
+  width: 80px; height: 8px;
+  background: #000; border: 3px solid #333;
+  appearance: none; -webkit-appearance: none;
+}
+#v6_3 .sl::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #00ffff; border: 3px solid #000; }
+
+/* rainbow GRUESO */
+#v6_3 .rb { height: 14px; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #8800ff, #ff00ff, #ff0000); border-top: 3px solid #000; }
+
+/* medi */
+#v6_3 .wn-sm { width: 320px; }
+#v6_3 .m-item {
+  padding: 12px 16px;
+  font-family: 'MedievalSharp', serif;
+  font-size: 0.8rem;
+  color: #aaa;
+  border-bottom: 3px solid #000;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+#v6_3 .m-item:hover { background: #1a1a1a; }
+#v6_3 .m-item.act { color: #00ffff; background: #0a1a1a; border-left: 5px solid #00ffff; text-shadow: 0 0 4px #00ffff; }
+#v6_3 .m-item span:last-child { color: #ff00ff; font-family: 'Space Mono', monospace; font-size: 0.55rem; }
+#v6_3 .m-ctrl {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 10px; border-top: 5px solid #000;
+  background: #111;
+}
+#v6_3 .m-now { font-size: 0.55rem; color: #00ffff; text-transform: uppercase; font-family: 'Space Mono', monospace; text-shadow: 0 0 4px #00ffff; }

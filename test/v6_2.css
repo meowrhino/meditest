@@ -1,0 +1,184 @@
+/*
+ * v6_2 — GRIMORIO
+ *
+ * Fondo negro con textura de diamantes/rombos visible tipo papel arcano
+ * Bordes doble-línea (inner + outer) estilo libro antiguo
+ * Chakras = círculos grandes solapados formando un arco
+ * Fuente MedievalSharp para todo, decoraciones con ✧ y ◆
+ */
+
+#v6_2 {
+  background: #080608;
+  color: #d4c5a0;
+  font-family: 'MedievalSharp', serif;
+  position: relative;
+}
+
+/* TEXTURA 1: rombos/diamantes dorados, MUY visibles */
+#v6_2::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 20L20 40L0 20z' fill='none' stroke='%23d4a030' stroke-width='0.8'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+}
+
+/* TEXTURA 2: puntos dorados dispersos */
+#v6_2::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: radial-gradient(circle, #d4a030 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 10px 10px;
+}
+
+#v6_2 > * { position: relative; z-index: 1; }
+
+#v6_2 .dlbl {
+  font-size: 0.55rem;
+  color: #d4a030;
+  border: 1px solid #d4a030;
+  padding: 4px 16px;
+  letter-spacing: 3px;
+}
+
+/* VENTANA: doble borde (oro exterior, marrón interior) = efecto libro */
+#v6_2 .wn {
+  width: 440px;
+  position: relative;
+  background: #0e0c08;
+  border: 3px solid #d4a030;
+  outline: 3px solid #0e0c08;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px #6b5020;
+}
+
+/* ICONOS: símbolos arcanos */
+#v6_2 .icos { display: flex; gap: 22px; margin: 8px 0; }
+#v6_2 .ico-i { font-size: 2rem; color: #d4a030; cursor: pointer; }
+#v6_2 .ico-l { font-size: 0.42rem; color: #8b7040; font-family: 'MedievalSharp', serif; letter-spacing: 1px; }
+
+/* CHAKRAS: grandes círculos solapados formando un arco iris */
+#v6_2 .ch-row {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+}
+#v6_2 .ch-orb {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  margin-left: -18px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  position: relative;
+}
+#v6_2 .ch-orb:first-child { margin-left: 0; }
+#v6_2 .ch-orb:hover { transform: scale(1.1); z-index: 2; }
+#v6_2 .ch-orb.sel {
+  transform: scale(1.15);
+  z-index: 3;
+  box-shadow: 0 0 20px currentColor;
+}
+/* inner symbol */
+#v6_2 .ch-orb svg { width: 36px; height: 36px; }
+
+/* franja color */
+#v6_2 .fr-color {
+  border-top: 3px solid #d4a030;
+  border-bottom: 3px solid #d4a030;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+#v6_2 .c-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #000;
+  letter-spacing: 3px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 1;
+}
+#v6_2 .c-name::before { content: '✧ '; font-size: 0.8rem; }
+#v6_2 .c-name::after { content: ' ✧'; font-size: 0.8rem; }
+#v6_2 .c-hz {
+  font-family: 'MedievalSharp', serif;
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.4);
+  position: relative;
+  z-index: 1;
+}
+
+/* controles */
+#v6_2 .fr-ctrl {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #0e0c08;
+}
+#v6_2 .btn {
+  background: #1a1508;
+  border: 2px solid #d4a030;
+  color: #d4a030;
+  font-family: 'MedievalSharp', serif;
+  font-size: 0.65rem;
+  padding: 8px 14px;
+  cursor: default;
+}
+#v6_2 .btn.act { background: #d4a030; color: #0e0c08; }
+#v6_2 .btn-play { width: 44px; height: 44px; padding: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+#v6_2 .sl {
+  width: 80px; height: 4px;
+  background: #1a1508; border: 1px solid #6b5020;
+  appearance: none; -webkit-appearance: none;
+}
+#v6_2 .sl::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #d4a030; border: 2px solid #000; border-radius: 50%; }
+
+/* rainbow */
+#v6_2 .rb { height: 10px; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #8800ff, #ff00ff, #ff0000); }
+
+/* medi */
+#v6_2 .wn-sm { width: 300px; }
+#v6_2 .m-item {
+  padding: 12px 16px;
+  font-family: 'MedievalSharp', serif;
+  font-size: 0.8rem;
+  color: #a09070;
+  border-bottom: 1px solid #2a2010;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+#v6_2 .m-item:hover { background: #1a1508; }
+#v6_2 .m-item.act { color: #d4a030; background: #1a1508; border-left: 4px solid #d4a030; }
+#v6_2 .m-item span:last-child { color: #8b7040; font-size: 0.65rem; }
+#v6_2 .m-ctrl {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 10px; border-top: 3px solid #d4a030;
+}
+#v6_2 .m-now { font-size: 0.6rem; color: #d4a030; }

@@ -1,0 +1,232 @@
+/*
+ * v6_1 — RETRO TERMINAL
+ *
+ * Fondo negro con grid verde MUY visible (tipo pantalla CRT)
+ * Bordes verdes gruesos, scanlines pesadas, texto verde fósforo
+ * Chakras = barras verticales de color (como un ecualizador)
+ * Esquina cortada con línea de color visible en el corte
+ */
+
+#v6_1 {
+  background: #020804;
+  color: #00ff66;
+  font-family: 'Space Mono', monospace;
+  position: relative;
+}
+
+/* TEXTURA 1: grid verde muy visible */
+#v6_1::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(#00ff66 1px, transparent 1px),
+    linear-gradient(90deg, #00ff66 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* TEXTURA 2: scanlines CRT pesadas */
+#v6_1::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    #000 2px, #000 4px
+  );
+}
+
+#v6_1 > * { position: relative; z-index: 1; }
+
+/* label */
+#v6_1 .dlbl {
+  font-size: 0.5rem;
+  color: #00ff66;
+  border: 2px solid #00ff66;
+  padding: 4px 14px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* VENTANA: borde verde grueso + esquina cortada con línea de color */
+#v6_1 .wn {
+  width: 440px;
+  position: relative;
+  background: #000;
+  border: 4px solid #00aa44;
+  overflow: visible;
+}
+
+/* esquina diagonal: línea de color visible usando un pseudo-element */
+#v6_1 .wn::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 50px;
+  height: 50px;
+  background: #020804;
+  border-left: 4px solid #00aa44;
+  transform: rotate(45deg);
+  transform-origin: bottom left;
+}
+
+/* ICONOS: simbolos ascii en verde */
+#v6_1 .icos {
+  display: flex;
+  gap: 20px;
+  margin: 6px 0;
+}
+#v6_1 .ico-i {
+  font-size: 1.8rem;
+  color: #00ff66;
+  text-shadow: 0 0 8px #00ff66;
+  cursor: pointer;
+}
+#v6_1 .ico-l {
+  font-size: 0.4rem;
+  color: #00aa44;
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* CHAKRAS: barras verticales gruesas (como ecualizador) */
+#v6_1 .ch-row {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 0;
+}
+#v6_1 .ch-bar {
+  flex: 1;
+  min-height: 100px;
+  cursor: pointer;
+  border-right: 2px solid #000;
+  transition: opacity 0.15s;
+  opacity: 0.7;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+#v6_1 .ch-bar:last-child { border-right: none; }
+#v6_1 .ch-bar:hover { opacity: 0.9; }
+#v6_1 .ch-bar.sel { opacity: 1; }
+#v6_1 .ch-bar .ch-inner {
+  width: 6px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: height 0.3s;
+}
+
+/* franja color */
+#v6_1 .fr-color {
+  border-top: 4px solid #00aa44;
+  border-bottom: 4px solid #00aa44;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+/* scanlines on color */
+#v6_1 .fr-color::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, #000 2px, #000 4px);
+}
+
+#v6_1 .c-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  letter-spacing: 4px;
+  position: relative;
+  z-index: 1;
+}
+#v6_1 .c-hz {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(0,0,0,0.5);
+  position: relative;
+  z-index: 1;
+}
+
+/* controles */
+#v6_1 .fr-ctrl {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #000;
+}
+#v6_1 .btn {
+  background: #001a0a;
+  border: 3px solid #00aa44;
+  color: #00ff66;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  letter-spacing: 1px;
+  cursor: default;
+}
+#v6_1 .btn.act { background: #00aa44; color: #000; }
+#v6_1 .btn-play { width: 44px; height: 44px; padding: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
+
+/* slider */
+#v6_1 .sl {
+  width: 80px; height: 6px;
+  background: #001a0a;
+  border: 2px solid #00aa44;
+  appearance: none; -webkit-appearance: none;
+}
+#v6_1 .sl::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: #00ff66; border: 3px solid #000; }
+
+/* rainbow */
+#v6_1 .rb { height: 12px; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #8800ff, #ff00ff, #ff0000); }
+
+/* medi */
+#v6_1 .wn-sm { width: 300px; }
+#v6_1 .m-item {
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #00aa44;
+  border-bottom: 2px solid #001a0a;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0.5px;
+}
+#v6_1 .m-item:hover { background: #001a0a; }
+#v6_1 .m-item.act { color: #00ff66; background: #001a0a; border-left: 5px solid #00ff66; }
+#v6_1 .m-item span:last-child { color: #ffff00; }
+#v6_1 .m-ctrl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-top: 4px solid #00aa44;
+}
+#v6_1 .m-now { font-size: 0.55rem; color: #ffff00; text-transform: uppercase; font-family: 'Space Mono', monospace; }
