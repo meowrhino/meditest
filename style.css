@@ -472,6 +472,24 @@ body::after {
   flex-direction: column;
 }
 
+/* progress bar */
+.medi-progress {
+  height: 6px;
+  background: #000;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  border-bottom: 2px solid var(--border);
+}
+
+.medi-progress-fill {
+  height: 100%;
+  background: #fff;
+  width: 0%;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
 .medi-lista {
   list-style: none;
   flex: 2;

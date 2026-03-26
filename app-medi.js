@@ -170,6 +170,41 @@ const AppMedi = (() => {
     });
 
     audio.addEventListener('ended', () => setPlayingUI(false));
+
+    // progress bar
+    const progressBar = ventana.querySelector('.medi-progress');
+    const progressFill = ventana.querySelector('.medi-progress-fill');
+
+    if (progressBar && progressFill) {
+      // update fill on timeupdate
+      audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+          progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        }
+      });
+
+      // seek on click/drag
+      let seeking = false;
+
+      function seekTo(e) {
+        const rect = progressBar.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        if (audio.duration) {
+          audio.currentTime = pct * audio.duration;
+          progressFill.style.width = (pct * 100) + '%';
+        }
+      }
+
+      progressBar.addEventListener('mousedown', (e) => { seeking = true; seekTo(e); });
+      progressBar.addEventListener('touchstart', (e) => { seeking = true; seekTo(e.touches[0]); }, { passive: true });
+      window.addEventListener('mousemove', (e) => { if (seeking) seekTo(e); });
+      window.addEventListener('touchmove', (e) => { if (seeking) seekTo(e.touches[0]); }, { passive: true });
+      window.addEventListener('mouseup', () => { seeking = false; });
+      window.addEventListener('touchend', () => { seeking = false; });
+
+      // reset on new track
+      audio.addEventListener('loadstart', () => { progressFill.style.width = '0%'; });
+    }
   }
 
   return { init };
