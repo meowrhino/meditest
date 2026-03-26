@@ -34,7 +34,7 @@
           <div class="ctrl-col">
             <button class="ctrl-btn modo-btn" title="Cambiar modo de sonido">
               <span class="modo-icon"><svg viewBox="0 0 32 32"><path d="M4 16 Q8 4 12 16 Q16 28 20 16 Q24 4 28 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
-              <span class="modo-label">sine</span>
+              <span class="modo-label"></span>
             </button>
           </div>
           <div class="ctrl-col">
@@ -63,10 +63,24 @@
       <div class="ventana-body">
         <ul class="medi-lista"></ul>
         <div class="medi-controles">
-          <button class="ctrl-btn play-btn medi-play" title="Play / Pause">
-            <svg class="icon-play" viewBox="0 0 24 24" width="22" height="22"><polygon points="6,3 20,12 6,21" fill="currentColor"/></svg>
-            <svg class="icon-pause" viewBox="0 0 24 24" width="22" height="22" style="display:none"><rect x="5" y="3" width="4" height="18" fill="currentColor"/><rect x="15" y="3" width="4" height="18" fill="currentColor"/></svg>
-          </button>
+          <div class="ctrl-col">
+            <div class="filter-wrap">
+              <svg class="filter-icon" viewBox="0 0 32 32" width="16" height="16"><path d="M4 8 L16 20 L16 28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="8" x2="28" y2="8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+              <input type="range" class="filter-slider lpf-slider" min="200" max="20000" step="100" value="20000" title="Low Pass Filter">
+            </div>
+          </div>
+          <div class="ctrl-col">
+            <button class="ctrl-btn play-btn medi-play" title="Play / Pause">
+              <svg class="icon-play" viewBox="0 0 24 24" width="22" height="22"><polygon points="6,3 20,12 6,21" fill="currentColor"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" width="22" height="22" style="display:none"><rect x="5" y="3" width="4" height="18" fill="currentColor"/><rect x="15" y="3" width="4" height="18" fill="currentColor"/></svg>
+            </button>
+          </div>
+          <div class="ctrl-col">
+            <div class="filter-wrap">
+              <svg class="filter-icon" viewBox="0 0 32 32" width="16" height="16"><path d="M28 8 L16 20 L16 28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="8" x2="28" y2="8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+              <input type="range" class="filter-slider hpf-slider" min="20" max="2000" step="10" value="20" title="High Pass Filter">
+            </div>
+          </div>
         </div>
         <div class="rainbow-bar"></div>
       </div>

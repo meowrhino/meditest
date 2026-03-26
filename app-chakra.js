@@ -128,7 +128,8 @@ const AppChakra = (() => {
     // modo
     modoBtn.addEventListener('click', () => {
       state.modoIndex = (state.modoIndex + 1) % modes.length;
-      modoLabel.textContent = modes[state.modoIndex].label;
+      // label hidden, but update title for hover tooltip
+      modoBtn.title = modes[state.modoIndex].label;
 
       // restart with new engine if playing
       if (state.playing && state.engine) {

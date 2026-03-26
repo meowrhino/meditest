@@ -56,16 +56,52 @@ const AppMedi = (() => {
       playBtn.classList.toggle('active', isPlaying);
     }
 
-    // connect audio to global analyser
+    // connect audio to global analyser with LPF + HPF chain
     function ensureConnected() {
       if (state.mediaSource) return;
       AudioGlobal.resume();
       try {
         state.mediaSource = AudioGlobal.ctx.createMediaElementSource(audio);
-        state.mediaSource.connect(AudioGlobal.masterGain);
+
+        // LPF: low pass filter (cuts highs)
+        state.lpf = AudioGlobal.ctx.createBiquadFilter();
+        state.lpf.type = 'lowpass';
+        state.lpf.frequency.value = 20000;
+        state.lpf.Q.value = 0.7;
+
+        // HPF: high pass filter (cuts lows)
+        state.hpf = AudioGlobal.ctx.createBiquadFilter();
+        state.hpf.type = 'highpass';
+        state.hpf.frequency.value = 20;
+        state.hpf.Q.value = 0.7;
+
+        // chain: source → LPF → HPF → master
+        state.mediaSource.connect(state.lpf);
+        state.lpf.connect(state.hpf);
+        state.hpf.connect(AudioGlobal.masterGain);
       } catch(_) {
-        // fallback: play without routing (won't show in visualizer)
+        // fallback: play without routing
       }
+    }
+
+    // filter sliders
+    const lpfSlider = ventana.querySelector('.lpf-slider');
+    const hpfSlider = ventana.querySelector('.hpf-slider');
+
+    if (lpfSlider) {
+      lpfSlider.addEventListener('input', () => {
+        if (state.lpf) {
+          state.lpf.frequency.setTargetAtTime(+lpfSlider.value, AudioGlobal.ctx.currentTime, 0.02);
+        }
+      });
+    }
+
+    if (hpfSlider) {
+      hpfSlider.addEventListener('input', () => {
+        if (state.hpf) {
+          state.hpf.frequency.setTargetAtTime(+hpfSlider.value, AudioGlobal.ctx.currentTime, 0.02);
+        }
+      });
     }
 
     // select item
