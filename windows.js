@@ -152,6 +152,13 @@ const Windows = (() => {
 
     document.body.appendChild(ventana);
 
+    // mobile: open fullscreen by default
+    if (window.innerWidth <= 600) {
+      ventana.classList.add('is-fullscreen');
+      const mfsBtn = ventana.querySelector('.ventana-fullscreen');
+      if (mfsBtn) mfsBtn.classList.add('is-on');
+    }
+
     initDrag(ventana);
 
     ventana.addEventListener('mousedown', () => {
@@ -197,6 +204,7 @@ const Windows = (() => {
     if (snapBtn) {
       snapBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (window.innerWidth <= 600) return; // no snap on mobile
         const si = snapSlots.indexOf(ventana);
         if (si !== -1) {
           // already snapped → unsnap (restore)
@@ -251,7 +259,7 @@ const Windows = (() => {
     let startX, startY, origLeft, origTop;
 
     function onDown(e) {
-      if (e.target.closest('.ventana-cerrar')) return;
+      if (e.target.closest('.ventana-cerrar, .ventana-snap, .ventana-fullscreen')) return;
       dragging = true;
       const ev = e.touches ? e.touches[0] : e;
       startX = ev.clientX;
@@ -265,8 +273,16 @@ const Windows = (() => {
     function onMove(e) {
       if (!dragging) return;
       const ev = e.touches ? e.touches[0] : e;
-      ventana.style.left = `${origLeft + ev.clientX - startX}px`;
-      ventana.style.top = `${origTop + ev.clientY - startY}px`;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const w = ventana.offsetWidth;
+      let newLeft = origLeft + ev.clientX - startX;
+      let newTop = origTop + ev.clientY - startY;
+      // bounds: keep at least 40px of titlebar visible
+      newLeft = Math.max(-w + 40, Math.min(vw - 40, newLeft));
+      newTop = Math.max(0, Math.min(vh - 40, newTop));
+      ventana.style.left = `${newLeft}px`;
+      ventana.style.top = `${newTop}px`;
     }
 
     function onUp() { dragging = false; }

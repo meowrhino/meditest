@@ -664,6 +664,11 @@ body::after {
 
 /* ── responsive ── */
 @media (max-width: 600px) {
+  body {
+    overflow: auto;
+    overflow-x: hidden;
+  }
+
   #iconos {
     flex-direction: row;
     flex-wrap: wrap;
@@ -672,18 +677,45 @@ body::after {
     gap: 10px;
   }
 
-  .ventana {
+  /* only constrain non-fullscreen, non-snapped windows */
+  .ventana:not(.is-fullscreen):not(.is-snapped) {
     min-width: 0;
     width: calc(100vw - 16px) !important;
     left: 8px !important;
   }
 
-  .ventana-chakra, .ventana-medi, .ventana-viz {
-    width: calc(100vw - 16px) !important;
+  /* bigger touch targets */
+  .ventana-titlebar {
+    height: 44px;
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .ventana-cerrar,
+  .ventana-snap,
+  .ventana-fullscreen {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* disable snap on mobile */
+  .ventana-snap {
+    opacity: 0.3;
+    pointer-events: none;
   }
 
   .chakra-btn svg {
     width: 32px;
     height: 32px;
+  }
+
+  /* taller progress bar for touch */
+  .medi-progress {
+    height: 20px;
+  }
+
+  /* scroll inside fullscreen windows */
+  .ventana.is-fullscreen .ventana-body {
+    overflow-y: auto;
   }
 }
