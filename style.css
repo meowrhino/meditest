@@ -183,6 +183,32 @@ body::after {
 .ventana-cerrar:hover { transform: scale(1.2); }
 .ventana-cerrar:active { transform: scale(0.9); }
 
+/* green = fullscreen toggle */
+.ventana-fullscreen {
+  width: 14px;
+  height: 14px;
+  background: #00c853;
+  border: 2px solid #333;
+  cursor: pointer;
+  font-size: 0;
+  transition: transform 0.1s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.ventana-fullscreen:hover { transform: scale(1.2); }
+.ventana-fullscreen:active { transform: scale(0.9); }
+.ventana-fullscreen.is-on { background: #fff; }
+
+.ventana.is-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99990 !important;
+}
+
+/* yellow = snap-to-grid toggle */
 .ventana-snap {
   width: 14px;
   height: 14px;
@@ -190,16 +216,16 @@ body::after {
   border: 2px solid #333;
   cursor: pointer;
   font-size: 0;
-  transition: transform 0.1s, opacity 0.15s;
+  transition: transform 0.1s, background 0.15s, opacity 0.15s;
   flex-shrink: 0;
 }
 
 .ventana-snap:hover { transform: scale(1.2); }
 .ventana-snap:active { transform: scale(0.9); }
+.ventana-snap.is-on { background: #fff; }
 .ventana-snap.disabled { opacity: 0.3; cursor: default; }
 .ventana-snap.disabled:hover { transform: none; }
 
-/* snapped state */
 .ventana.is-snapped {
   transition: top 0.2s, left 0.2s, width 0.2s, height 0.2s;
 }
@@ -242,7 +268,7 @@ body::after {
 /* franja 1: chakras — bloques de color */
 .franja-chakras {
   padding: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .chakra-row {
@@ -276,8 +302,10 @@ body::after {
 }
 
 .chakra-btn svg {
-  width: 48px;
-  height: 48px;
+  width: 70%;
+  height: 70%;
+  max-width: 48px;
+  max-height: 48px;
 }
 
 /* franja 2: color */

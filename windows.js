@@ -166,12 +166,53 @@ const Windows = (() => {
       });
     }
 
-    // snap-to-grid (yellow button)
+    // green = fullscreen toggle
+    const fsBtn = ventana.querySelector('.ventana-fullscreen');
+    if (fsBtn) {
+      let savedFs = null;
+      fsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (ventana.classList.contains('is-fullscreen')) {
+          ventana.classList.remove('is-fullscreen');
+          fsBtn.classList.remove('is-on');
+          if (savedFs) {
+            ventana.style.top = savedFs.top;
+            ventana.style.left = savedFs.left;
+            ventana.style.width = savedFs.width;
+            ventana.style.height = savedFs.height;
+          }
+        } else {
+          savedFs = {
+            top: ventana.style.top, left: ventana.style.left,
+            width: ventana.style.width, height: ventana.style.height,
+          };
+          ventana.classList.add('is-fullscreen');
+          fsBtn.classList.add('is-on');
+        }
+      });
+    }
+
+    // yellow = snap-to-grid toggle
     const snapBtn = ventana.querySelector('.ventana-snap');
     if (snapBtn) {
       snapBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        snapToGrid(ventana);
+        const si = snapSlots.indexOf(ventana);
+        if (si !== -1) {
+          // already snapped → unsnap (restore)
+          snapSlots[si] = null;
+          ventana.classList.remove('is-snapped');
+          snapBtn.classList.remove('is-on');
+          // restore original size from CSS
+          ventana.style.width = '';
+          ventana.style.height = '';
+          updateAllSnapButtons();
+        } else {
+          snapToGrid(ventana);
+          if (snapSlots.includes(ventana)) {
+            snapBtn.classList.add('is-on');
+          }
+        }
       });
     }
 
