@@ -36,14 +36,8 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  mix-blend-mode: difference;
-  opacity: 0.09;
-  background-image:
-    radial-gradient(circle, #aaa 1.2px, transparent 1.2px);
-  background-size: 24px 24px;
-  /* radial mask: visible en centro, desvanece en bordes */
-  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 20%, transparent 75%);
-  mask-image: radial-gradient(ellipse at 50% 50%, #000 20%, transparent 75%);
+  opacity: 0.04;
+  background: radial-gradient(ellipse at 50% 50%, #444 0%, transparent 65%);
 }
 
 /* capa 2: zigzag pattern con variación radial opuesta */
@@ -183,32 +177,7 @@ body::after {
 .ventana-cerrar:hover { transform: scale(1.2); }
 .ventana-cerrar:active { transform: scale(0.9); }
 
-/* green = fullscreen toggle */
-.ventana-fullscreen {
-  width: 14px;
-  height: 14px;
-  background: #00c853;
-  border: 2px solid #333;
-  cursor: pointer;
-  font-size: 0;
-  transition: transform 0.1s, background 0.15s;
-  flex-shrink: 0;
-}
-
-.ventana-fullscreen:hover { transform: scale(1.2); }
-.ventana-fullscreen:active { transform: scale(0.9); }
-.ventana-fullscreen.is-on { background: #fff; }
-
-.ventana.is-fullscreen {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 99990 !important;
-}
-
-/* yellow = snap-to-grid toggle */
+/* yellow = snap-to-grid toggle (middle button) */
 .ventana-snap {
   width: 14px;
   height: 14px;
@@ -226,8 +195,35 @@ body::after {
 .ventana-snap.disabled { opacity: 0.3; cursor: default; }
 .ventana-snap.disabled:hover { transform: none; }
 
+/* green = fullscreen toggle (right button) */
+.ventana-fullscreen {
+  width: 14px;
+  height: 14px;
+  background: #00c853;
+  border: 2px solid #333;
+  cursor: pointer;
+  font-size: 0;
+  transition: transform 0.1s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.ventana-fullscreen:hover { transform: scale(1.2); }
+.ventana-fullscreen:active { transform: scale(0.9); }
+.ventana-fullscreen.is-on { background: #fff; }
+
+/* animated transitions for fullscreen and snap */
+.ventana.is-fullscreen,
 .ventana.is-snapped {
-  transition: top 0.2s, left 0.2s, width 0.2s, height 0.2s;
+  transition: top 0.25s ease, left 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.ventana.is-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99990 !important;
 }
 
 
