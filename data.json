@@ -18,7 +18,11 @@
     { "id": "pinknoise", "label": "pink noise" },
     { "id": "brownnoise", "label": "brown noise" },
     { "id": "singing-bowl", "label": "singing bowl" },
-    { "id": "harmonic", "label": "harmonic" }
+    { "id": "harmonic", "label": "harmonic" },
+    { "id": "fm", "label": "fm bell" },
+    { "id": "granular", "label": "granular" },
+    { "id": "vibrato", "label": "vibrato" },
+    { "id": "resonant", "label": "resonant" }
   ],
   "meditations": [
     { "slug": "relajacion", "name": "relajación guiada", "duration": "0:26" },

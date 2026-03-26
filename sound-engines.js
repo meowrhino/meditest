@@ -293,6 +293,196 @@ const SoundEngines = (() => {
     };
   }
 
+  // ── engine: FM synthesis (bell-like, organic metallic tones) ──
+
+  function createFM(ctx, freq, output) {
+    let carrier = null, modulator = null, modGain = null;
+
+    return {
+      start() {
+        carrier = ctx.createOscillator();
+        carrier.type = 'sine';
+        carrier.frequency.value = freq;
+
+        modulator = ctx.createOscillator();
+        modulator.type = 'sine';
+        modulator.frequency.value = freq * 2; // harmonic ratio
+
+        modGain = ctx.createGain();
+        modGain.gain.value = freq * 1.5; // modulation index
+
+        modulator.connect(modGain);
+        modGain.connect(carrier.frequency);
+
+        carrier.connect(output);
+        modulator.start();
+        carrier.start();
+      },
+      stop() {
+        [carrier, modulator].forEach(o => { if (o) try { o.stop(); } catch(_) {} });
+        carrier = modulator = modGain = null;
+      },
+      setFrequency(f) {
+        freq = f;
+        if (carrier) carrier.frequency.setTargetAtTime(f, ctx.currentTime, 0.05);
+        if (modulator) modulator.frequency.setTargetAtTime(f * 2, ctx.currentTime, 0.05);
+        if (modGain) modGain.gain.setTargetAtTime(f * 1.5, ctx.currentTime, 0.05);
+      },
+    };
+  }
+
+  // ── engine: granular (cloud-like, shimmering texture) ──
+
+  function createGranular(ctx, freq, output) {
+    let grainBuffer = null, intervalId = null;
+    const activeGrains = [];
+
+    function buildBuffer(f) {
+      const sr = ctx.sampleRate;
+      const len = Math.floor(sr * 0.5); // 0.5s buffer
+      const buf = ctx.createBuffer(1, len, sr);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) {
+        data[i] = Math.sin(2 * Math.PI * f * i / sr);
+      }
+      return buf;
+    }
+
+    function spawnGrain() {
+      if (!grainBuffer) return;
+      const src = ctx.createBufferSource();
+      src.buffer = grainBuffer;
+
+      // random grain duration 30-80ms
+      const dur = 0.03 + Math.random() * 0.05;
+      // random start position within the buffer
+      const offset = Math.random() * Math.max(0, grainBuffer.duration - dur);
+      // slight pitch variation ±5%
+      src.playbackRate.value = 0.95 + Math.random() * 0.1;
+
+      // grain envelope
+      const env = ctx.createGain();
+      const now = ctx.currentTime;
+      env.gain.setValueAtTime(0, now);
+      env.gain.linearRampToValueAtTime(0.6, now + dur * 0.3);
+      env.gain.linearRampToValueAtTime(0, now + dur);
+
+      src.connect(env);
+      env.connect(output);
+      src.start(now, offset, dur);
+      activeGrains.push(src);
+
+      // cleanup reference after grain ends
+      setTimeout(() => {
+        const idx = activeGrains.indexOf(src);
+        if (idx !== -1) activeGrains.splice(idx, 1);
+      }, dur * 1000 + 50);
+    }
+
+    return {
+      start() {
+        grainBuffer = buildBuffer(freq);
+        intervalId = setInterval(spawnGrain, 40);
+      },
+      stop() {
+        if (intervalId != null) { clearInterval(intervalId); intervalId = null; }
+        activeGrains.forEach(s => { try { s.stop(); } catch(_) {} });
+        activeGrains.length = 0;
+        grainBuffer = null;
+      },
+      setFrequency(f) {
+        freq = f;
+        grainBuffer = buildBuffer(f);
+      },
+    };
+  }
+
+  // ── engine: vibrato sine (warm, alive pure tone) ──
+
+  function createVibrato(ctx, freq, output) {
+    let osc = null, lfo = null, lfoGain = null;
+
+    return {
+      start() {
+        osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+
+        // LFO: 4 Hz modulating ±2% of frequency
+        lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 4;
+
+        lfoGain = ctx.createGain();
+        lfoGain.gain.value = freq * 0.02; // ±2%
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+
+        osc.connect(output);
+        lfo.start();
+        osc.start();
+      },
+      stop() {
+        [osc, lfo].forEach(o => { if (o) try { o.stop(); } catch(_) {} });
+        osc = lfo = lfoGain = null;
+      },
+      setFrequency(f) {
+        freq = f;
+        if (osc) osc.frequency.setTargetAtTime(f, ctx.currentTime, 0.05);
+        if (lfoGain) lfoGain.gain.setTargetAtTime(f * 0.02, ctx.currentTime, 0.05);
+      },
+    };
+  }
+
+  // ── engine: resonant sweep (ethereal, singing bowl-like digital wash) ──
+
+  function createResonant(ctx, freq, output) {
+    let src = null, filter = null, lfo = null, lfoGain = null;
+
+    return {
+      start() {
+        // white noise source
+        const buf = makeNoise(ctx, 'white');
+        src = ctx.createBufferSource();
+        src.buffer = buf;
+        src.loop = true;
+
+        // bandpass filter centered on chakra freq, high Q
+        filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = freq;
+        filter.Q.value = 12;
+
+        // very slow LFO (0.1 Hz) sweeping filter freq ±30%
+        lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.1;
+
+        lfoGain = ctx.createGain();
+        lfoGain.gain.value = freq * 0.3; // ±30%
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(filter.frequency);
+
+        src.connect(filter);
+        filter.connect(output);
+        src.start();
+        lfo.start();
+      },
+      stop() {
+        if (src) { try { src.stop(); } catch(_) {} src = null; }
+        if (lfo) { try { lfo.stop(); } catch(_) {} lfo = null; }
+        filter = lfoGain = null;
+      },
+      setFrequency(f) {
+        freq = f;
+        if (filter) filter.frequency.setTargetAtTime(f, ctx.currentTime, 0.05);
+        if (lfoGain) lfoGain.gain.setTargetAtTime(f * 0.3, ctx.currentTime, 0.05);
+      },
+    };
+  }
+
   // ── registry ──
 
   const engines = {
@@ -308,6 +498,10 @@ const SoundEngines = (() => {
     'brownnoise':   createNoiseEngine('brown'),
     'singing-bowl': createSingingBowl,
     'harmonic':     createHarmonic,
+    'fm':           createFM,
+    'granular':     createGranular,
+    'vibrato':      createVibrato,
+    'resonant':     createResonant,
   };
 
   return {
