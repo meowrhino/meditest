@@ -54,7 +54,7 @@ const AppChakra = (() => {
     chakras.forEach((ch, i) => {
       const btn = document.createElement('button');
       btn.className = 'chakra-btn' + (i === defaultIdx ? ' selected' : '');
-      btn.style.background = ch.color;
+      btn.style.setProperty('--ch-bg', ch.color);
       btn.setAttribute('aria-label', `${ch.sanskrit} – ${ch.name} – ${ch.freq} Hz`);
       btn.setAttribute('title', `${ch.name} – ${ch.freq} Hz`);
 

@@ -278,15 +278,12 @@ body::after {
   position: relative;
 }
 
+.chakra-btn { background: var(--ch-bg, #333); }
 .chakra-btn:last-child { border-right: none; }
 .chakra-btn:hover { filter: brightness(1.15); }
 
-.chakra-btn.selected::after {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 3px solid #fff;
-  pointer-events: none;
+.chakra-btn.selected {
+  background: #fff;
 }
 
 .chakra-btn svg {
@@ -453,11 +450,13 @@ body::after {
 .ventana-medi .ventana-body {
   flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .medi-lista {
   list-style: none;
-  flex: 1;
+  flex: 2;
   overflow-y: auto;
   padding: 0;
   min-height: 0;
@@ -502,7 +501,7 @@ body::after {
   justify-content: stretch;
   border-top: 5px solid var(--border);
   background: var(--surface);
-  /* same height as chakra controls franja */
+  flex: 1;
 }
 
 .medi-controles .ctrl-col {
@@ -551,21 +550,22 @@ body::after {
 
 .pad-cursor {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: var(--magenta);
-  border: 2px solid #000;
+  border: 2px solid #fff;
+  border-radius: 50%;
   pointer-events: none;
-  /* default position: top-right for LPF (max freq, min Q), bottom-left for HPF */
-  right: 4px;
-  top: 4px;
+  transform: translate(-50%, -50%);
+  /* default: LPF top-right (max freq, min Q) */
+  left: 90%;
+  top: 90%;
+  box-shadow: 0 0 6px var(--magenta);
 }
 
 .hpf-pad .pad-cursor {
-  right: auto;
-  top: auto;
-  left: 4px;
-  bottom: 4px;
+  left: 10%;
+  top: 90%;
 }
 
 .pad-label {

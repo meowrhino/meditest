@@ -84,62 +84,46 @@ const AppMedi = (() => {
       }
     }
 
-    // XY filter pads
-    // X axis = frequency cutoff, Y axis = Q/resonance
-    function initFilterPad(padEl, filter, freqRange, defaultX, defaultY) {
-      if (!padEl) return;
+    // XY filter pads — X = cutoff frequency (log), Y = Q/resonance
+    function initFilterPad(padEl, filter, freqRange) {
+      if (!padEl || !filter) return;
       const cursor = padEl.querySelector('.pad-cursor');
-      let dragging = false;
+      let active = false;
 
-      function update(x, y) {
+      function setFromEvent(e) {
         const rect = padEl.getBoundingClientRect();
-        const px = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
-        const py = Math.max(0, Math.min(1, (y - rect.top) / rect.height));
+        const ev = e.touches ? e.touches[0] : e;
+        const px = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+        const py = Math.max(0, Math.min(1, (ev.clientY - rect.top) / rect.height));
 
-        // position cursor
+        // position cursor with %
         if (cursor) {
-          cursor.style.left = (px * (rect.width - 10)) + 'px';
-          cursor.style.top = (py * (rect.height - 10)) + 'px';
+          cursor.style.left = (px * 100) + '%';
+          cursor.style.top = (py * 100) + '%';
           cursor.style.right = 'auto';
           cursor.style.bottom = 'auto';
+          cursor.style.transform = 'translate(-50%, -50%)';
         }
 
-        // X = frequency (log scale)
+        // X → freq (log scale)
         const minF = Math.log2(freqRange[0]);
         const maxF = Math.log2(freqRange[1]);
         const freq = Math.pow(2, minF + px * (maxF - minF));
 
-        // Y = Q (top = high Q/resonant, bottom = gentle)
-        const q = 0.5 + (1 - py) * 14.5; // 0.5 to 15
+        // Y → Q (top=resonant 15, bottom=gentle 0.5)
+        const q = 0.5 + (1 - py) * 14.5;
 
-        if (filter) {
-          const t = AudioGlobal.ctx.currentTime;
-          filter.frequency.setTargetAtTime(freq, t, 0.02);
-          filter.Q.setTargetAtTime(q, t, 0.02);
-        }
+        const t = AudioGlobal.ctx.currentTime;
+        filter.frequency.setTargetAtTime(freq, t, 0.03);
+        filter.Q.setTargetAtTime(q, t, 0.03);
       }
 
-      function onDown(e) {
-        dragging = true;
-        const ev = e.touches ? e.touches[0] : e;
-        update(ev.clientX, ev.clientY);
-        e.preventDefault();
-      }
-
-      function onMove(e) {
-        if (!dragging) return;
-        const ev = e.touches ? e.touches[0] : e;
-        update(ev.clientX, ev.clientY);
-      }
-
-      function onUp() { dragging = false; }
-
-      padEl.addEventListener('mousedown', onDown);
-      padEl.addEventListener('touchstart', onDown, { passive: false });
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('touchmove', onMove, { passive: false });
-      window.addEventListener('mouseup', onUp);
-      window.addEventListener('touchend', onUp);
+      padEl.addEventListener('mousedown', (e) => { active = true; setFromEvent(e); e.preventDefault(); });
+      padEl.addEventListener('touchstart', (e) => { active = true; setFromEvent(e); e.preventDefault(); }, { passive: false });
+      window.addEventListener('mousemove', (e) => { if (active) setFromEvent(e); });
+      window.addEventListener('touchmove', (e) => { if (active) setFromEvent(e); }, { passive: false });
+      window.addEventListener('mouseup', () => { active = false; });
+      window.addEventListener('touchend', () => { active = false; });
     }
 
     const lpfPad = ventana.querySelector('.lpf-pad');
