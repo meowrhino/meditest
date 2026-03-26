@@ -15,58 +15,27 @@
     <div id="iconos"></div>
   </div>
 
-  <!-- templates (se clonan por JS) -->
+  <!-- templates (se clonan y rellenan por JS desde data.json) -->
 
   <!-- PLANTILLA: ventana chakra -->
   <template id="tmpl-chakra">
     <div class="ventana ventana-chakra" data-type="chakra">
-      <div class="ventana-titlebar" style="--ventana-color: #d0bfff;">
+      <div class="ventana-titlebar" style="--ventana-glow: #d0bfff;">
         <button class="ventana-cerrar-btn" aria-label="cerrar">×</button>
         <span class="ventana-titulo">frecuencias</span>
       </div>
       <div class="ventana-body">
-        <!-- franja 1: chakras -->
+        <!-- franja 1: chakras (se rellena dinámicamente) -->
         <div class="franja franja-chakras">
-          <div class="chakra-row">
-            <button class="chakra-btn" data-chakra="0" data-color="#ff6b6b" data-freq="396" data-name="raíz" aria-label="Muladhara – raíz – 396 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#ff6b6b"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">1</text></svg>
-              <span class="chakra-label">raíz</span>
-            </button>
-            <button class="chakra-btn" data-chakra="1" data-color="#ffa94d" data-freq="417" data-name="sacro" aria-label="Svadhisthana – sacro – 417 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#ffa94d"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">2</text></svg>
-              <span class="chakra-label">sacro</span>
-            </button>
-            <button class="chakra-btn" data-chakra="2" data-color="#ffd43b" data-freq="528" data-name="plexo" aria-label="Manipura – plexo solar – 528 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#ffd43b"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">3</text></svg>
-              <span class="chakra-label">plexo</span>
-            </button>
-            <button class="chakra-btn selected" data-chakra="3" data-color="#69db7c" data-freq="639" data-name="corazón" aria-label="Anahata – corazón – 639 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#69db7c"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">4</text></svg>
-              <span class="chakra-label">corazón</span>
-            </button>
-            <button class="chakra-btn" data-chakra="4" data-color="#748ffc" data-freq="741" data-name="garganta" aria-label="Visuddha – garganta – 741 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#748ffc"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">5</text></svg>
-              <span class="chakra-label">garganta</span>
-            </button>
-            <button class="chakra-btn" data-chakra="5" data-color="#d0bfff" data-freq="852" data-name="tercer ojo" aria-label="Ajna – tercer ojo – 852 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#d0bfff"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">6</text></svg>
-              <span class="chakra-label">3er ojo</span>
-            </button>
-            <button class="chakra-btn" data-chakra="6" data-color="#e599f7" data-freq="963" data-name="corona" aria-label="Sahasrara – corona – 963 Hz">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#e599f7"/><text x="20" y="24" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="700">7</text></svg>
-              <span class="chakra-label">corona</span>
-            </button>
-          </div>
+          <div class="chakra-row"></div>
         </div>
-
         <!-- franja 2: color activo + info -->
-        <div class="franja franja-color" style="background: #69db7c;">
+        <div class="franja franja-color">
           <div class="color-info">
-            <span class="color-nombre">corazón</span>
-            <span class="color-freq">639 Hz</span>
+            <span class="color-nombre"></span>
+            <span class="color-freq"></span>
           </div>
         </div>
-
         <!-- franja 3: controles -->
         <div class="franja franja-controles">
           <button class="ctrl-btn modo-btn" title="Cambiar modo de sonido">
@@ -77,7 +46,7 @@
             <svg class="icon-pause" viewBox="0 0 24 24" width="28" height="28" style="display:none"><rect x="5" y="3" width="4" height="18" fill="currentColor"/><rect x="15" y="3" width="4" height="18" fill="currentColor"/></svg>
           </button>
           <div class="vol-wrap">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/></svg>
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/></svg>
             <input type="range" class="vol-slider" min="0" max="1" step="0.01" value="0.5">
           </div>
         </div>
@@ -88,33 +57,13 @@
   <!-- PLANTILLA: ventana meditaciones -->
   <template id="tmpl-medi">
     <div class="ventana ventana-medi" data-type="medi">
-      <div class="ventana-titlebar" style="--ventana-color: #99e9f2;">
+      <div class="ventana-titlebar" style="--ventana-glow: #06b6d4;">
         <button class="ventana-cerrar-btn" aria-label="cerrar">×</button>
         <span class="ventana-titulo">meditaciones</span>
       </div>
       <div class="ventana-body">
-        <ul class="medi-lista">
-          <li class="medi-item" data-src="meditations/relajacion.mp3">
-            <span class="medi-name">relajación guiada</span>
-            <span class="medi-dur">10 min</span>
-          </li>
-          <li class="medi-item" data-src="meditations/respiracion.mp3">
-            <span class="medi-name">respiración consciente</span>
-            <span class="medi-dur">7 min</span>
-          </li>
-          <li class="medi-item" data-src="meditations/bodyscan.mp3">
-            <span class="medi-name">body scan</span>
-            <span class="medi-dur">15 min</span>
-          </li>
-          <li class="medi-item" data-src="meditations/gratitud.mp3">
-            <span class="medi-name">gratitud</span>
-            <span class="medi-dur">8 min</span>
-          </li>
-          <li class="medi-item" data-src="meditations/dormir.mp3">
-            <span class="medi-name">para dormir</span>
-            <span class="medi-dur">20 min</span>
-          </li>
-        </ul>
+        <!-- lista se rellena dinámicamente -->
+        <ul class="medi-lista"></ul>
         <div class="medi-controles">
           <span class="medi-now">—</span>
           <button class="ctrl-btn play-btn medi-play" title="Play / Pause">
@@ -126,6 +75,38 @@
     </div>
   </template>
 
+  <!-- PLANTILLA: ventana visualizador -->
+  <template id="tmpl-viz">
+    <div class="ventana ventana-viz" data-type="viz">
+      <div class="ventana-titlebar" style="--ventana-glow: #7c3aed;">
+        <button class="ventana-cerrar-btn" aria-label="cerrar">×</button>
+        <span class="ventana-titulo">visualizer</span>
+      </div>
+      <div class="ventana-body viz-body">
+        <canvas class="viz-canvas"></canvas>
+        <div class="viz-overlay">
+          <span class="viz-preset-name"></span>
+        </div>
+        <div class="viz-no-audio">play something to see visuals</div>
+      </div>
+    </div>
+  </template>
+
+  <!-- butterchurn -->
+  <script src="vendor/butterchurn-presets/base.min.js" defer></script>
+  <script type="module">
+    import butterchurn from './vendor/butterchurn/butterchurn.js';
+    window.butterchurn = butterchurn;
+    window.dispatchEvent(new Event('butterchurn-ready'));
+  </script>
+
+  <!-- app modules -->
+  <script src="audio-global.js"></script>
+  <script src="sound-engines.js"></script>
+  <script src="windows.js"></script>
+  <script src="app-chakra.js"></script>
+  <script src="app-medi.js"></script>
+  <script src="app-viz.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

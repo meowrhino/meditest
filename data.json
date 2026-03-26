@@ -1,0 +1,37 @@
+{
+  "chakras": [
+    { "id": 0, "name": "raíz", "sanskrit": "Muladhara", "freq": 396, "color": "#ff6b6b" },
+    { "id": 1, "name": "sacro", "sanskrit": "Svadhisthana", "freq": 417, "color": "#ffa94d" },
+    { "id": 2, "name": "plexo solar", "sanskrit": "Manipura", "freq": 528, "color": "#ffd43b" },
+    { "id": 3, "name": "corazón", "sanskrit": "Anahata", "freq": 639, "color": "#69db7c" },
+    { "id": 4, "name": "garganta", "sanskrit": "Visuddha", "freq": 741, "color": "#748ffc" },
+    { "id": 5, "name": "tercer ojo", "sanskrit": "Ajna", "freq": 852, "color": "#d0bfff" },
+    { "id": 6, "name": "corona", "sanskrit": "Sahasrara", "freq": 963, "color": "#e599f7" }
+  ],
+  "soundModes": [
+    { "id": "sine", "label": "sine" },
+    { "id": "triangle", "label": "triangle" },
+    { "id": "sawtooth", "label": "sawtooth" },
+    { "id": "square", "label": "square" },
+    { "id": "binaural", "label": "binaural" },
+    { "id": "isochronic", "label": "isochronic" },
+    { "id": "om", "label": "om drone" },
+    { "id": "whitenoise", "label": "white noise" },
+    { "id": "pinknoise", "label": "pink noise" },
+    { "id": "brownnoise", "label": "brown noise" },
+    { "id": "singing-bowl", "label": "singing bowl" },
+    { "id": "harmonic", "label": "harmonic" }
+  ],
+  "meditations": [
+    { "slug": "relajacion", "name": "relajación guiada", "duration": "0:26" },
+    { "slug": "respiracion", "name": "respiración consciente", "duration": "0:40" },
+    { "slug": "bodyscan", "name": "body scan", "duration": "0:35" }
+  ],
+  "visualizer": {
+    "activePreset": "martin - witchcraft reloaded",
+    "blendSeconds": 2.7
+  },
+  "butterchurnModes": [
+    "martin - witchcraft reloaded"
+  ]
+}
