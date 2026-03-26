@@ -32,39 +32,41 @@ body {
   user-select: none;
 }
 
-/* ── TEXTURAS DE FONDO ── */
-/* capa 1: zigzag con overlay — crea relieve sutil */
+/* ── TEXTURAS DE FONDO (2 capas sutiles con mask-image para degradado) ── */
+
+/* capa 1: zigzag arrows — se desvanece hacia la derecha */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  mix-blend-mode: overlay;
-  opacity: 0.08;
-  background-color: transparent;
+  mix-blend-mode: difference;
+  opacity: 0.05;
   background-image:
-    linear-gradient(135deg, #fff 25%, transparent 25%),
-    linear-gradient(225deg, #fff 25%, transparent 25%),
-    linear-gradient(45deg, #fff 25%, transparent 25%),
-    linear-gradient(315deg, #fff 25%, transparent 25%);
+    linear-gradient(135deg, #888 25%, transparent 25%),
+    linear-gradient(225deg, #888 25%, transparent 25%),
+    linear-gradient(45deg, #888 25%, transparent 25%),
+    linear-gradient(315deg, #888 25%, transparent 25%);
   background-position: 10px 0, 10px 0, 0 0, 0 0;
   background-size: 20px 20px;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 80%);
+  mask-image: linear-gradient(90deg, #000 0%, transparent 80%);
 }
 
-/* capa 2: cruces/puntos con exclusion — añade grano */
+/* capa 2: diagonal lines — se desvanece hacia arriba */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  mix-blend-mode: exclusion;
-  opacity: 0.03;
-  background-color: transparent;
-  background-image:
-    radial-gradient(circle, #888 1px, transparent 1px);
-  background-size: 16px 16px;
+  mix-blend-mode: difference;
+  opacity: 0.04;
+  background-image: linear-gradient(-45deg, transparent, transparent 50%, #777 50%, #777);
+  background-size: 10px 10px;
+  -webkit-mask-image: linear-gradient(0deg, #000 0%, transparent 70%);
+  mask-image: linear-gradient(0deg, #000 0%, transparent 70%);
 }
 
 /* ── escritorio ── */
@@ -182,6 +184,36 @@ body::after {
 
 .ventana-cerrar:hover { transform: scale(1.2); }
 .ventana-cerrar:active { transform: scale(0.9); }
+
+.ventana-fullscreen {
+  width: 14px;
+  height: 14px;
+  background: #00c853;
+  border: 2px solid #333;
+  cursor: pointer;
+  font-size: 0;
+  transition: transform 0.1s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.ventana-fullscreen:hover { transform: scale(1.2); }
+.ventana-fullscreen:active { transform: scale(0.9); }
+
+/* when fullscreen, button turns yellow */
+.ventana.is-fullscreen .ventana-fullscreen {
+  background: #ffd700;
+}
+
+/* fullscreen state */
+.ventana.is-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99990 !important;
+  border-radius: 0;
+}
 
 /* hide old close btn class if any */
 .ventana-cerrar-btn { display: none; }
@@ -493,51 +525,63 @@ body::after {
   border: none;
 }
 
-/* filter controls */
-.filter-wrap {
+/* XY filter pads */
+.filter-pad {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 6px;
+  position: relative;
+  background: #0a0a0a;
+  cursor: crosshair;
+  overflow: hidden;
+  touch-action: none;
 }
 
-.filter-icon {
-  color: var(--text-dim);
+/* subtle grid lines inside pad */
+.filter-pad::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px);
+  background-size: 25% 25%;
 }
 
-.filter-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  max-width: 70px;
-  height: 6px;
-  background: #000;
-  border: 2px solid #333;
-  outline: none;
-  transform: rotate(-90deg);
-  transform-origin: center;
-}
-
-.filter-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
+.pad-cursor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
   background: var(--magenta);
   border: 2px solid #000;
-  cursor: pointer;
+  pointer-events: none;
+  /* default position: top-right for LPF (max freq, min Q), bottom-left for HPF */
+  right: 4px;
+  top: 4px;
 }
 
-.filter-slider::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  background: var(--magenta);
-  border: 2px solid #000;
-  cursor: pointer;
-  border-radius: 0;
+.hpf-pad .pad-cursor {
+  right: auto;
+  top: auto;
+  left: 4px;
+  bottom: 4px;
+}
+
+.pad-label {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  font-size: 0.4rem;
+  color: rgba(255,255,255,0.15);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.hpf-pad .pad-label {
+  right: auto;
+  left: 4px;
 }
 
 /* no corner decorations for medi */

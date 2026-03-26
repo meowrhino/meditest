@@ -84,24 +84,72 @@ const AppMedi = (() => {
       }
     }
 
-    // filter sliders
-    const lpfSlider = ventana.querySelector('.lpf-slider');
-    const hpfSlider = ventana.querySelector('.hpf-slider');
+    // XY filter pads
+    // X axis = frequency cutoff, Y axis = Q/resonance
+    function initFilterPad(padEl, filter, freqRange, defaultX, defaultY) {
+      if (!padEl) return;
+      const cursor = padEl.querySelector('.pad-cursor');
+      let dragging = false;
 
-    if (lpfSlider) {
-      lpfSlider.addEventListener('input', () => {
-        if (state.lpf) {
-          state.lpf.frequency.setTargetAtTime(+lpfSlider.value, AudioGlobal.ctx.currentTime, 0.02);
+      function update(x, y) {
+        const rect = padEl.getBoundingClientRect();
+        const px = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+        const py = Math.max(0, Math.min(1, (y - rect.top) / rect.height));
+
+        // position cursor
+        if (cursor) {
+          cursor.style.left = (px * (rect.width - 10)) + 'px';
+          cursor.style.top = (py * (rect.height - 10)) + 'px';
+          cursor.style.right = 'auto';
+          cursor.style.bottom = 'auto';
         }
-      });
+
+        // X = frequency (log scale)
+        const minF = Math.log2(freqRange[0]);
+        const maxF = Math.log2(freqRange[1]);
+        const freq = Math.pow(2, minF + px * (maxF - minF));
+
+        // Y = Q (top = high Q/resonant, bottom = gentle)
+        const q = 0.5 + (1 - py) * 14.5; // 0.5 to 15
+
+        if (filter) {
+          const t = AudioGlobal.ctx.currentTime;
+          filter.frequency.setTargetAtTime(freq, t, 0.02);
+          filter.Q.setTargetAtTime(q, t, 0.02);
+        }
+      }
+
+      function onDown(e) {
+        dragging = true;
+        const ev = e.touches ? e.touches[0] : e;
+        update(ev.clientX, ev.clientY);
+        e.preventDefault();
+      }
+
+      function onMove(e) {
+        if (!dragging) return;
+        const ev = e.touches ? e.touches[0] : e;
+        update(ev.clientX, ev.clientY);
+      }
+
+      function onUp() { dragging = false; }
+
+      padEl.addEventListener('mousedown', onDown);
+      padEl.addEventListener('touchstart', onDown, { passive: false });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onUp);
+      window.addEventListener('touchend', onUp);
     }
 
-    if (hpfSlider) {
-      hpfSlider.addEventListener('input', () => {
-        if (state.hpf) {
-          state.hpf.frequency.setTargetAtTime(+hpfSlider.value, AudioGlobal.ctx.currentTime, 0.02);
-        }
-      });
+    const lpfPad = ventana.querySelector('.lpf-pad');
+    const hpfPad = ventana.querySelector('.hpf-pad');
+
+    // init pads after first audio connection (filters exist)
+    function initPads() {
+      if (state.lpf) initFilterPad(lpfPad, state.lpf, [200, 20000]);
+      if (state.hpf) initFilterPad(hpfPad, state.hpf, [20, 2000]);
+      state._padsInit = true;
     }
 
     // select item
@@ -116,6 +164,7 @@ const AppMedi = (() => {
         if (mediNow) mediNow.textContent = name;
 
         ensureConnected();
+        if (!state._padsInit) initPads();
         audio.src = src;
         audio.play().catch(() => {});
         setPlayingUI(true);

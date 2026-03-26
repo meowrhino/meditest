@@ -96,6 +96,36 @@ const Windows = (() => {
       });
     }
 
+    // fullscreen toggle
+    const fsBtn = ventana.querySelector('.ventana-fullscreen');
+    if (fsBtn) {
+      // save original size/position for restore
+      let savedStyle = null;
+
+      fsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (ventana.classList.contains('is-fullscreen')) {
+          // restore
+          ventana.classList.remove('is-fullscreen');
+          if (savedStyle) {
+            ventana.style.top = savedStyle.top;
+            ventana.style.left = savedStyle.left;
+            ventana.style.width = savedStyle.width;
+            ventana.style.height = savedStyle.height;
+          }
+        } else {
+          // save current & go fullscreen
+          savedStyle = {
+            top: ventana.style.top,
+            left: ventana.style.left,
+            width: ventana.style.width,
+            height: ventana.style.height,
+          };
+          ventana.classList.add('is-fullscreen');
+        }
+      });
+    }
+
     // llamar init específico
     const cb = initCallbacks[tipo];
     if (cb) cb(ventana);
