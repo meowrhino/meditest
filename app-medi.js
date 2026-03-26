@@ -47,7 +47,7 @@ const AppMedi = (() => {
     const playBtn = ventana.querySelector('.medi-play');
     const iconPlay = playBtn.querySelector('.icon-play');
     const iconPause = playBtn.querySelector('.icon-pause');
-    const mediNow = ventana.querySelector('.medi-now');
+    const mediNow = ventana.querySelector('.medi-now'); // may be null, that's OK
 
     function setPlayingUI(isPlaying) {
       state.playing = isPlaying;
@@ -77,7 +77,7 @@ const AppMedi = (() => {
         const src = item.dataset.src;
         const name = item.querySelector('.medi-name').textContent;
         state.currentSrc = src;
-        mediNow.textContent = name;
+        if (mediNow) mediNow.textContent = name;
 
         ensureConnected();
         audio.src = src;

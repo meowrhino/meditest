@@ -17,7 +17,9 @@
   <!-- PLANTILLA: ventana chakra -->
   <template id="tmpl-chakra">
     <div class="ventana ventana-chakra" data-type="chakra">
-      <button class="ventana-cerrar" aria-label="cerrar"></button>
+      <div class="ventana-titlebar">
+        <button class="ventana-cerrar" aria-label="cerrar"></button>
+      </div>
       <div class="ventana-body">
         <div class="franja franja-chakras">
           <div class="chakra-row"></div>
@@ -55,7 +57,9 @@
   <!-- PLANTILLA: ventana meditaciones -->
   <template id="tmpl-medi">
     <div class="ventana ventana-medi" data-type="medi">
-      <button class="ventana-cerrar" aria-label="cerrar"></button>
+      <div class="ventana-titlebar">
+        <button class="ventana-cerrar" aria-label="cerrar"></button>
+      </div>
       <div class="ventana-body">
         <ul class="medi-lista"></ul>
         <div class="medi-controles">
@@ -72,7 +76,9 @@
   <!-- PLANTILLA: ventana visualizador -->
   <template id="tmpl-viz">
     <div class="ventana ventana-viz" data-type="viz">
-      <button class="ventana-cerrar" aria-label="cerrar"></button>
+      <div class="ventana-titlebar">
+        <button class="ventana-cerrar" aria-label="cerrar"></button>
+      </div>
       <div class="ventana-body viz-body">
         <canvas class="viz-canvas"></canvas>
         <div class="viz-overlay">

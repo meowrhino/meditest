@@ -88,7 +88,7 @@ const Windows = (() => {
       ventana.style.zIndex = ++windowZ;
     });
 
-    const cerrarBtn = ventana.querySelector('.ventana-cerrar-btn') || ventana.querySelector('.ventana-cerrar');
+    const cerrarBtn = ventana.querySelector('.ventana-cerrar');
     if (cerrarBtn) {
       cerrarBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -121,14 +121,12 @@ const Windows = (() => {
   // ── drag ──
 
   function initDrag(ventana) {
-    // drag from titlebar if exists, otherwise from the franja-color or franja-chakras
-    const dragHandle = ventana.querySelector('.ventana-titlebar') || ventana.querySelector('.franja-color') || ventana;
+    const dragHandle = ventana.querySelector('.ventana-titlebar') || ventana;
     let dragging = false;
     let startX, startY, origLeft, origTop;
 
     function onDown(e) {
-      if (e.target.closest('.ventana-cerrar-btn') || e.target.closest('.ventana-cerrar')) return;
-      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('canvas')) return;
+      if (e.target.closest('.ventana-cerrar')) return;
       dragging = true;
       const ev = e.touches ? e.touches[0] : e;
       startX = ev.clientX;
