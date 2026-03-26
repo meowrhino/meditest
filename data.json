@@ -32,8 +32,5 @@
   "visualizer": {
     "activePreset": "martin - witchcraft reloaded",
     "blendSeconds": 2.7
-  },
-  "butterchurnModes": [
-    "martin - witchcraft reloaded"
-  ]
+  }
 }

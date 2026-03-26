@@ -71,12 +71,11 @@ const SoundEngines = (() => {
   // Two oscillators panned L/R with ~6Hz difference
 
   function createBinaural(ctx, freq, output) {
-    let oscL = null, oscR = null, panL = null, panR = null, merger = null;
+    let oscL = null, oscR = null, panL = null, panR = null;
     const BEAT_HZ = 6;
 
     return {
       start() {
-        merger = ctx.createChannelMerger(2);
         panL = ctx.createStereoPanner(); panL.pan.value = -1;
         panR = ctx.createStereoPanner(); panR.pan.value = 1;
 
@@ -91,7 +90,7 @@ const SoundEngines = (() => {
       },
       stop() {
         [oscL, oscR].forEach(o => { if (o) try { o.stop(); } catch(_) {} });
-        oscL = oscR = panL = panR = merger = null;
+        oscL = oscR = panL = panR = null;
       },
       setFrequency(f) {
         freq = f;
