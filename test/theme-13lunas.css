@@ -1,0 +1,137 @@
+/*
+ * theme-13lunas.css — Estética 13lunas.net
+ *
+ * Bordes biselados 3D, colores planos sólidos, rainbow bars,
+ * Space Mono uppercase, texturas apiladas (dots + diagonales),
+ * fondo violeta profundo, acentos verde brillante.
+ */
+
+body {
+  font-family: 'Space Mono', monospace;
+  background: #2a0845;
+  color: #fff;
+}
+
+/* texturas apiladas */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle, #fff 1px, transparent 1px),
+    radial-gradient(circle, #d0bfff 0.8px, transparent 0.8px);
+  background-size: 80px 80px, 120px 120px;
+  background-position: 0 0, 40px 40px;
+  opacity: 0.04;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.025;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #d0bfff 10px, #d0bfff 11px);
+}
+
+/* bevel */
+.bevel {
+  border: 4px solid #000;
+  outline: 2px solid #000;
+  outline-offset: 2px;
+  box-shadow: inset 2px 2px 0 #e0e0e0, inset -2px -2px 0 #666, 6px 6px 0 rgba(0,0,0,0.5);
+}
+
+/* rainbow */
+.rainbow-bar {
+  height: 8px;
+  background: repeating-linear-gradient(90deg,
+    #ff0000 0 4px, #ff8800 4px 8px, #ffff00 8px 12px,
+    #00cc44 12px 16px, #0088ff 16px 20px, #8800ff 20px 24px, #ff00cc 24px 28px);
+}
+
+.rainbow-dots {
+  height: 6px;
+  background-image:
+    radial-gradient(circle 2px, #ff0000 100%, transparent),
+    radial-gradient(circle 2px, #ff8800 100%, transparent),
+    radial-gradient(circle 2px, #ffff00 100%, transparent),
+    radial-gradient(circle 2px, #00cc44 100%, transparent),
+    radial-gradient(circle 2px, #0088ff 100%, transparent),
+    radial-gradient(circle 2px, #8800ff 100%, transparent),
+    radial-gradient(circle 2px, #ff00cc 100%, transparent);
+  background-size: 28px 6px;
+  background-position: 0 0, 4px 0, 8px 0, 12px 0, 16px 0, 20px 0, 24px 0;
+  background-repeat: repeat-x;
+}
+
+/* window */
+.window { background: #1a0530; }
+.window-titlebar { background: #00a651; border-bottom: 3px solid #000; }
+.window-close { background: #ff3333; border: 2px solid #000; box-shadow: inset 1px 1px 0 #ff9999, inset -1px -1px 0 #990000; }
+.window-title { color: #fff; text-shadow: 1px 1px 0 rgba(0,0,0,0.5); }
+
+/* franjas */
+.franja { border-bottom: 3px solid #000; }
+.franja:last-child { border-bottom: none; }
+.franja-chakras { background: #3a0d5c; }
+
+.chakra-btn { border-right: 1px solid rgba(255,255,255,0.06); }
+.chakra-btn:last-child { border-right: none; }
+.chakra-btn:hover { background: rgba(255,255,255,0.06); }
+.chakra-btn.selected { background: rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(255,255,255,0.05); }
+.chakra-btn svg { filter: drop-shadow(0 0 6px var(--cc, #fff)); }
+
+.franja-color::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: 0.06;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.3) 3px, rgba(0,0,0,0.3) 4px);
+}
+
+.color-nombre { font-size: 1.3rem; font-weight: 700; text-transform: uppercase; color: #fff; text-shadow: 2px 2px 0 rgba(0,0,0,0.4); letter-spacing: 3px; }
+.color-freq { font-size: 0.75rem; color: rgba(255,255,255,0.7); text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
+
+.franja-controles { background: #1a0530; padding: 8px 16px; gap: 10px; }
+
+.ctrl-btn {
+  background: #2a0845;
+  border: 2px solid #000;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.1), inset -1px -1px 0 rgba(0,0,0,0.3);
+  color: #00e070;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.ctrl-btn:hover { background: #3a0d5c; }
+.ctrl-btn.play-btn { width: 44px; height: 44px; padding: 0; font-size: 1.2rem; color: #fff; display: flex; align-items: center; justify-content: center; }
+.ctrl-btn.active { background: #00a651; color: #fff; }
+
+.vol-wrap { display: flex; align-items: center; gap: 6px; color: #00e070; font-size: 0.7rem; }
+.vol-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 6px; background: #000; border: 1px solid #555; outline: none; }
+.vol-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: #00e070; border: 2px solid #000; cursor: pointer; }
+
+/* medi */
+.medi-item { color: #d0bfff; border-bottom: 2px solid rgba(0,0,0,0.3); }
+.medi-item:hover { background: rgba(255,255,255,0.03); }
+.medi-item.active-item { background: rgba(0,166,81,0.15); color: #00e070; border-left: 4px solid #00a651; }
+.medi-item span:last-child { color: #ffd700; font-size: 0.6rem; }
+.medi-controles { border-top: 3px solid #000; background: #1a0530; }
+.medi-now { font-size: 0.6rem; color: #ffd700; text-transform: uppercase; letter-spacing: 1px; }
+
+/* iconos */
+.icono-demo-img {
+  background: #1a0530;
+  border: 3px solid #000;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.15), inset -1px -1px 0 rgba(0,0,0,0.4), 3px 3px 0 rgba(0,0,0,0.5);
+  color: #00e070;
+}
+.icono-demo-label { color: #00e070; }
+
+.page-label {
+  font-size: 0.6rem; color: #ffd700;
+  text-transform: uppercase; letter-spacing: 3px;
+  padding: 6px 20px; border: 2px solid #ffd700;
+  font-family: 'Space Mono', monospace;
+}
