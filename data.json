@@ -11,8 +11,6 @@
   "soundModes": [
     { "id": "sine", "label": "sine" },
     { "id": "triangle", "label": "triangle" },
-    { "id": "sawtooth", "label": "sawtooth" },
-    { "id": "square", "label": "square" },
     { "id": "binaural", "label": "binaural" },
     { "id": "isochronic", "label": "isochronic" },
     { "id": "om", "label": "om drone" },
