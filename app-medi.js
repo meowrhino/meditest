@@ -110,8 +110,9 @@ const AppMedi = (() => {
         const maxF = Math.log2(freqRange[1]);
         const freq = Math.pow(2, minF + px * (maxF - minF));
 
-        // Y → Q (top=resonant 15, bottom=gentle 0.5)
-        const q = 0.5 + (1 - py) * 14.5;
+        // Y → Q exponential (top=very resonant 25, bottom=gentle 0.3)
+        // exponential makes it more perceptible across the range
+        const q = 0.3 * Math.pow(25 / 0.3, 1 - py);
 
         const t = AudioGlobal.ctx.currentTime;
         filter.frequency.setTargetAtTime(freq, t, 0.03);
