@@ -15,28 +15,34 @@ const Windows = (() => {
 
   // ── iconos ──
 
-  const ICON_CONFIG = {
-    chakra: { glyph: '~', label: 'frecuencias', glow: '#d0bfff' },
-    medi:   { glyph: '▶', label: 'meditaciones', glow: '#06b6d4' },
-    viz:    { glyph: '✦', label: 'visualizer', glow: '#7c3aed' },
+  // SVG icons for desktop (unique drawings, no text boxes)
+  const ICON_SVGS = {
+    chakra: `<svg viewBox="0 0 32 32" width="32" height="32"><path d="M4 16 Q8 4 12 16 Q16 28 20 16 Q24 4 28 16" fill="none" stroke="#ff00ff" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+    medi:   `<svg viewBox="0 0 32 32" width="32" height="32"><path d="M16 24 Q10 18 8 10 Q16 14 16 14 Q16 14 24 10 Q22 18 16 24Z" fill="#00ffff" stroke="none"/></svg>`,
+    viz:    `<svg viewBox="0 0 32 32" width="32" height="32"><path d="M2 16 Q16 4 30 16 Q16 28 2 16Z" fill="none" stroke="#ffff00" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="#ffff00"/></svg>`,
+  };
+
+  const ICON_LABELS = {
+    chakra: 'onda',
+    medi:   'guía',
+    viz:    'visión',
   };
 
   function asegurarIcono(tipo) {
     const id = `icono-${tipo}`;
     if (document.getElementById(id)) return;
 
-    const cfg = ICON_CONFIG[tipo] || { glyph: '?', label: tipo, glow: '#888' };
     const icono = document.createElement('div');
     icono.className = 'icono';
     icono.id = id;
 
     const img = document.createElement('div');
     img.className = 'icono-img';
-    img.textContent = cfg.glyph;
+    img.innerHTML = ICON_SVGS[tipo] || '';
 
     const label = document.createElement('span');
     label.className = 'icono-label';
-    label.textContent = cfg.label;
+    label.textContent = ICON_LABELS[tipo] || tipo;
 
     icono.appendChild(img);
     icono.appendChild(label);
@@ -82,11 +88,13 @@ const Windows = (() => {
       ventana.style.zIndex = ++windowZ;
     });
 
-    const cerrarBtn = ventana.querySelector('.ventana-cerrar-btn');
-    cerrarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      cerrar(ventana);
-    });
+    const cerrarBtn = ventana.querySelector('.ventana-cerrar-btn') || ventana.querySelector('.ventana-cerrar');
+    if (cerrarBtn) {
+      cerrarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        cerrar(ventana);
+      });
+    }
 
     // llamar init específico
     const cb = initCallbacks[tipo];
@@ -113,12 +121,14 @@ const Windows = (() => {
   // ── drag ──
 
   function initDrag(ventana) {
-    const titlebar = ventana.querySelector('.ventana-titlebar');
+    // drag from titlebar if exists, otherwise from the franja-color or franja-chakras
+    const dragHandle = ventana.querySelector('.ventana-titlebar') || ventana.querySelector('.franja-color') || ventana;
     let dragging = false;
     let startX, startY, origLeft, origTop;
 
     function onDown(e) {
-      if (e.target.closest('.ventana-cerrar-btn')) return;
+      if (e.target.closest('.ventana-cerrar-btn') || e.target.closest('.ventana-cerrar')) return;
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('canvas')) return;
       dragging = true;
       const ev = e.touches ? e.touches[0] : e;
       startX = ev.clientX;
@@ -138,8 +148,8 @@ const Windows = (() => {
 
     function onUp() { dragging = false; }
 
-    titlebar.addEventListener('mousedown', onDown);
-    titlebar.addEventListener('touchstart', onDown, { passive: false });
+    dragHandle.addEventListener('mousedown', onDown);
+    dragHandle.addEventListener('touchstart', onDown, { passive: false });
     window.addEventListener('mousemove', onMove);
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('mouseup', onUp);
